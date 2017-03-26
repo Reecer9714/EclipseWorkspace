@@ -11,6 +11,13 @@ local.properties
 .loadpath
 .recommenders
 
+#Folders
+BackUp
+HElp
+JavaGamemakerEng
+Pokemon
+TextBased
+
 # Eclipse Core
 .project
 
