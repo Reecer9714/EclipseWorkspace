@@ -1,7 +1,6 @@
 package hacking.main;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.*;
@@ -30,7 +29,8 @@ public class Game extends JFrame{
 
     private static LinkedList<String> lastCommands = new LinkedList<String>();
     private static int commandIndex = 0;
-    
+    private static int fileIndex = 0;
+
     // private static final String TAB = "\t";
     // private static double cpuUse;
     // private static double hddUse;
@@ -38,11 +38,7 @@ public class Game extends JFrame{
 
     public static void main(String[] args){
 	game = new Game();
-	game.init();
-
-	gui = new Test(game, 650, 700);
-	game.add(gui);
-
+	game.setVisible(true);
 	game.start();
     }
 
@@ -51,9 +47,14 @@ public class Game extends JFrame{
 		+ (ran.nextInt(254) + 1);
     }
 
-    public void init(){
+    public Game(){
+	setTitle("Hacking");
+	setSize(650, 700);
+	setFocusable(true);
+	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 	myComputer = new Computer("My Computer", ranIP());
-	Mail mail1 = new Mail(myComputer.getMailBox().getAddress(), "creator@game.com", new Date(3,18,97), "welcome",
+	Mail mail1 = new Mail(myComputer.getMailBox().getAddress(), "creator@game.com", new Date(3, 18, 97), "welcome",
 		"Thanks for Playing this game");
 	myComputer.getMail().add(mail1);
 	maillistData = new DefaultListModel<Mail>();
@@ -83,6 +84,11 @@ public class Game extends JFrame{
 	    ips.addLine(c.getName() + ": " + c.getIp());
 	}
 
+	gui = new Test(this);
+	this.getContentPane().add(gui);
+	setupInput();
+//	addKeyListener(new Input());
+	this.requestFocusInWindow();
     }
 
     public void start(){
@@ -99,20 +105,55 @@ public class Game extends JFrame{
 
     }
 
-    public static class Input extends KeyAdapter{
-	@Override
-	public void keyPressed(KeyEvent e){
-	    System.out.println("PRESSED");
-	    if(lastCommands.size() > 0){
-		if(e.getID() == KeyEvent.VK_UP){
+    @SuppressWarnings("serial")
+    private void setupInput(){
+	InputMap im = gui.getInputField().getInputMap(JTextField.WHEN_FOCUSED);
+
+	// Buttons
+	im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "previousCommand");
+	im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "nextCommand");
+	im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "cycleFile");
+
+	// Action
+	gui.getInputField().getActionMap().put("previousCommand", new AbstractAction(){
+	    @Override
+	    public void actionPerformed(ActionEvent e){
+		System.out.println("UP");
+		if(lastCommands.size() > 0){
 		    commandIndex = (commandIndex + 1) % lastCommands.size();
-		    Test.getInputField().setText(lastCommands.get(commandIndex));
-		}else if(e.getID() == KeyEvent.VK_DOWN){
-		    commandIndex = (commandIndex - 1) % lastCommands.size();
-		    Test.getInputField().setText(lastCommands.get(commandIndex));
+		    gui.getInputField().setText(lastCommands.get(commandIndex));
 		}
 	    }
-	}
+	});
+
+	gui.getInputField().getActionMap().put("nextCommand", new AbstractAction(){
+	    @Override
+	    public void actionPerformed(ActionEvent e){
+		System.out.println("DOWN");
+		if(lastCommands.size() > 0){
+		    commandIndex = (commandIndex + lastCommands.size()-1) % lastCommands.size();
+		    gui.getInputField().setText(lastCommands.get(commandIndex));
+		}
+	    }
+	});
+	
+	//Override Tab
+	gui.getInputField().getActionMap().put("cycleFile", new AbstractAction(){
+	    @Override
+	    public void actionPerformed(ActionEvent e){
+		System.out.println("TAB");
+		if(connectedComp.getCurrentDir().getChildren().size() == 0) return;
+		fileIndex = (fileIndex + 1) % connectedComp.getCurrentDir().getChildren().size();
+		int lastIndex = (fileIndex + connectedComp.getCurrentDir().getChildren().size()-1) % connectedComp.getCurrentDir().getChildren().size();
+		String fileName = connectedComp.getCurrentDir().getChildren().get(fileIndex).getName();
+		String cmd = gui.getInputField().getText().replace(connectedComp.getCurrentDir().getChildren().get(lastIndex).getName(), "");
+		if(gui.getInputField().getText().equals("")){
+		    gui.getInputField().setText(fileName);
+		}else{
+		    gui.getInputField().setText(cmd + fileName);
+		}
+	    }
+	});
     }
 
     public static void messageOut(String s){
@@ -121,6 +162,7 @@ public class Game extends JFrame{
     }
 
     public static void handleInput(String s){
+	System.out.println(game.isFocused());
 	addLastCommand(s);
 	String[] command = s.split(" ");
 	command[0] = command[0].toLowerCase();
@@ -245,5 +287,24 @@ public class Game extends JFrame{
 	    maillistData.addElement(p);
 	}
 	maillist.setModel(maillistData);
+    }
+
+    private class Input extends KeyAdapter{
+	@Override
+	public void keyPressed(KeyEvent e){
+	    System.out.println("Pressed");
+	    if(lastCommands.size() > 0){
+		if(e.getID() == KeyEvent.VK_UP){
+		    System.out.println("UP");
+		    commandIndex = (commandIndex + 1) % lastCommands.size();
+		    gui.getInputField().setText(lastCommands.get(commandIndex));
+		}
+		if(e.getID() == KeyEvent.VK_DOWN){
+		    System.out.println("Down");
+		    commandIndex = (commandIndex - 1) % lastCommands.size();
+		    gui.getInputField().setText(lastCommands.get(commandIndex));
+		}
+	    }
+	}
     }
 }

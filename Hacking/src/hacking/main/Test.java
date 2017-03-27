@@ -2,6 +2,8 @@ package hacking.main;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -22,12 +24,9 @@ public class Test extends JPanel{
     private static JLabel cpuUseLbl;
     private static JLabel hddUseLbl;
     private static JLabel netUseLbl;
-
-    public Test(Game game, int width, int height){
-	game.setTitle("Hacking");
-	game.setSize(width, height);
-	game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	game.addKeyListener(new Game.Input());
+    
+    private Set<AWTKeyStroke> set = new HashSet<AWTKeyStroke>();
+    public Test(Game game){
 	// getContentPane().add(new Panel());
 	this.setLayout(new BorderLayout(0, 0));
 
@@ -54,6 +53,11 @@ public class Test extends JPanel{
 	cmdArea.setForeground(Color.WHITE);
 
 	cmdField = new JTextField();
+	//Tabbed now does not change focus
+	cmdField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
+		set);
+	cmdField.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
+		set);
 	cmdField.setMargin(new Insets(4, 4, 4, 4));
 	cmdField.setMinimumSize(new Dimension(6, 25));
 	cmdField.setFont(new Font("Lucida Console", Font.PLAIN, 13));
@@ -149,8 +153,6 @@ public class Test extends JPanel{
 
 	JSeparator separator = new JSeparator();
 	menuBar.add(separator);
-
-	game.setVisible(true);
     }
 
     public JProgressBar getCpuProgress(){
@@ -181,8 +183,8 @@ public class Test extends JPanel{
 	return cmdArea;
     }
 
-    public static JTextField getInputField(){
+    public JTextField getInputField(){
 	return cmdField;
     }
-    
+
 }

@@ -2,8 +2,6 @@ package hacking.main.mail;
 
 import java.util.ArrayList;
 
-import javax.swing.tree.TreeNode;
-
 public class MailBox{
     private String address;
     private ArrayList<Mail> box;
