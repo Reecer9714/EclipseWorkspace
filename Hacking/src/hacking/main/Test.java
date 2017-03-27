@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 
 import hacking.main.files.File;
@@ -24,8 +25,9 @@ public class Test extends JPanel{
     private static JLabel cpuUseLbl;
     private static JLabel hddUseLbl;
     private static JLabel netUseLbl;
-    
+
     private Set<AWTKeyStroke> set = new HashSet<AWTKeyStroke>();
+
     public Test(Game game){
 	// getContentPane().add(new Panel());
 	this.setLayout(new BorderLayout(0, 0));
@@ -53,11 +55,9 @@ public class Test extends JPanel{
 	cmdArea.setForeground(Color.WHITE);
 
 	cmdField = new JTextField();
-	//Tabbed now does not change focus
-	cmdField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
-		set);
-	cmdField.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
-		set);
+	// Tabbed now does not change focus
+	cmdField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, set);
+	cmdField.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, set);
 	cmdField.setMargin(new Insets(4, 4, 4, 4));
 	cmdField.setMinimumSize(new Dimension(6, 25));
 	cmdField.setFont(new Font("Lucida Console", Font.PLAIN, 13));
@@ -91,9 +91,39 @@ public class Test extends JPanel{
 	tabbedPane.addTab("Running", null, programs, null);
 
 	JScrollPane mail = new JScrollPane();
-	JList<Mail> maillist = game.getMail();
-	mail.add(maillist);
-	tabbedPane.addTab("Mail", null, mail, null);
+	JTree maillist = new JTree(Game.myComputer.getMailRoot());
+	maillist.setRootVisible(false);
+//	/*
+	maillist.setCellRenderer(new DefaultTreeCellRenderer(){
+	    private Icon readIcon = UIManager.getIcon("FileChooser.newFolderIcon");
+	    private Icon unreadIcon = UIManager.getIcon("FileChooser.upFolderIcon");
+
+	    @Override
+	    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
+		    boolean isLeaf, int row, boolean focused){
+		Component c = super.getTreeCellRendererComponent(tree, value, selected, expanded, isLeaf, row, focused);
+		if(((Mail)value).isRead())
+		    setIcon(readIcon);
+		else setIcon(unreadIcon);
+		return c;
+	    }
+	});
+//	*/
+	maillist.addMouseListener(new MouseAdapter(){
+	    public void mousePressed(MouseEvent e){
+		int selRow = maillist.getRowForLocation(e.getX(), e.getY());
+		TreePath selPath = maillist.getPathForLocation(e.getX(), e.getY());
+		if(selRow != -1 && e.getClickCount() == 2 && selPath != null){
+		    Mail selectedFile = (Mail)selPath.getLastPathComponent();
+		    if(selectedFile.isLeaf()){
+			selectedFile.open();
+		    }
+		}
+	    }
+	});
+	// game.getMail();
+	//mail.add(maillist);
+	tabbedPane.addTab("Mail", null, maillist, null);
 
 	JTree files = game.getTree();
 	files.setRootVisible(false);

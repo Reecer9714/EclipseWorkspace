@@ -7,8 +7,7 @@ import javax.swing.tree.TreeNode;
 import hacking.main.*;
 import hacking.main.files.Folder;
 import hacking.main.files.TextFile;
-import hacking.main.mail.Mail;
-import hacking.main.mail.MailBox;
+import hacking.main.mail.*;
 
 public class Computer{
     private String name;
@@ -63,8 +62,11 @@ public class Computer{
 	}
     }
 
-    public TreeNode getRoot(){
+    public TreeNode getFileRoot(){
 	return C;
+    }
+    public TreeNode getMailRoot(){
+	return box;
     }
 
     public TextFile getLog(){

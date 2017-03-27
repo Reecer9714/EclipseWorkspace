@@ -53,21 +53,23 @@ public class Game extends JFrame{
 	setFocusable(true);
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-	myComputer = new Computer("My Computer", ranIP());
-	Mail mail1 = new Mail(myComputer.getMailBox().getAddress(), "creator@game.com", new Date(3, 18, 97), "welcome",
+	myComputer = new Computer("MyComputer", ranIP());
+	comps.put("127.0.0.1", myComputer);
+	Mail mail1 = new Mail(myComputer.getMailBox().getAddress(), "creator@game.com", new Date(3, 18, 97), "Welcome",
 		"Thanks for Playing this game");
 	myComputer.getMail().add(mail1);
-	maillistData = new DefaultListModel<Mail>();
+	mail1.setParent(myComputer.getMailBox());
+	//maillistData = new DefaultListModel<Mail>();
 	// maillist = new JList<Mail>(myComputer.getMail().toArray(new
 	// Mail[0]));
-	maillist = new JList<Mail>();
-	maillist.setModel(maillistData);
-	updateMaillist();
+	//maillist = new JList<Mail>();
+	//maillist.setModel(maillistData);
+	//updateMaillist();
 
 	connectedComp = myComputer;
 	scan = new Scanner(System.in);
 
-	fileTree = new JTree(myComputer.getRoot());
+	fileTree = new JTree(myComputer.getFileRoot());
 	ips = new TextFile("listedips");
 	// Lookup server//
 	Computer lookup = new Computer("Lookup", "1.2.3.4");

@@ -35,6 +35,6 @@ public class Date{
     
     @Override
     public String toString(){
-	return String.format("%2i/%2i/%2i", month, day, year);
+	return String.format("%2d/%2d/%2d", month, day, year);
     }
 }
