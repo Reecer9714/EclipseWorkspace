@@ -1,6 +1,6 @@
 # Features to Add
-Program system
-Resource system
+* Program system
+* Resource system
 
 # TODO:
-fix gui spacing issue caused by new mail system
+* fix gui spacing issue caused by new mail system
