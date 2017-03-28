@@ -1,15 +1,13 @@
 package hacking.main.mail;
 
 import java.util.Enumeration;
-import java.util.Map.Entry;
 
 import javax.swing.tree.TreeNode;
 
 import hacking.main.Game;
-import hacking.main.computers.Computer;
 import hacking.main.files.File;
 
-public class Mail implements TreeNode{
+public class Mail{
     private String to;
     private String from;
     private Date sent;
@@ -42,7 +40,7 @@ public class Mail implements TreeNode{
     }
     
     public String getContents(){
-	String r = String.format("To: %s\nFrom: %s\n Subject: %s\n Content: %s\n", to, from, subject, body);
+	String r = String.format("To: %s\nFrom: %s\n Subject: %s\n Content: \n%s\n\t", to, from, subject, body);
 	if(hasAttach()) r+= "Attached: " + attach + " (use [download])";
 	return r;
     }
@@ -98,42 +96,7 @@ public class Mail implements TreeNode{
 
     @Override
     public String toString(){
-	return sent + ": " + from + ": " + subject;
-    }
-
-    @Override
-    public TreeNode getChildAt(int childIndex){
-	return null;
-    }
-
-    @Override
-    public int getChildCount(){
-	return 0;
-    }
-
-    @Override
-    public TreeNode getParent(){
-	return parent;
-    }
-
-    @Override
-    public int getIndex(TreeNode node){
-	return 0;
-    }
-
-    @Override
-    public boolean getAllowsChildren(){
-	return false;
-    }
-
-    @Override
-    public boolean isLeaf(){
-	return true;
-    }
-
-    @Override
-    public Enumeration children(){
-	return null;
+	return subject + ": " + from;
     }
 
 }

@@ -4,17 +4,19 @@ import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.Timer;
 
 import hacking.main.computers.Computer;
 import hacking.main.files.TextFile;
+import hacking.main.mail.*;
 import hacking.main.mail.Date;
-import hacking.main.mail.Mail;
 
 public class Game extends JFrame{
     private static final long serialVersionUID = 1L;
 
     public static boolean RUNNING = true;
     public static Game game;
+    public static int width, height;
     private static Scanner scan;
     private static Random ran = new Random();
     private static Test gui;
@@ -22,7 +24,6 @@ public class Game extends JFrame{
     static Computer myComputer;
     static Computer connectedComp;
     private static JTree fileTree;
-    private static JList<Mail> maillist;
     private static DefaultListModel<Mail> maillistData;
     private static TextFile ips;
     private static HashMap<String, Computer> comps = new HashMap<String, Computer>();
@@ -37,7 +38,7 @@ public class Game extends JFrame{
     // private static double netUse;
 
     public static void main(String[] args){
-	game = new Game();
+	game = new Game(850, 900);
 	game.setVisible(true);
 	game.start();
     }
@@ -47,24 +48,16 @@ public class Game extends JFrame{
 		+ (ran.nextInt(254) + 1);
     }
 
-    public Game(){
+    public Game(int w, int h){
+	Game.width = w;
+	Game.height = h;
 	setTitle("Hacking");
-	setSize(650, 700);
+	setSize(width, height);
 	setFocusable(true);
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	myComputer = new Computer("MyComputer", ranIP());
 	comps.put("127.0.0.1", myComputer);
-	Mail mail1 = new Mail(myComputer.getMailBox().getAddress(), "creator@game.com", new Date(3, 18, 97), "Welcome",
-		"Thanks for Playing this game");
-	myComputer.getMail().add(mail1);
-	mail1.setParent(myComputer.getMailBox());
-	//maillistData = new DefaultListModel<Mail>();
-	// maillist = new JList<Mail>(myComputer.getMail().toArray(new
-	// Mail[0]));
-	//maillist = new JList<Mail>();
-	//maillist.setModel(maillistData);
-	//updateMaillist();
 
 	connectedComp = myComputer;
 	scan = new Scanner(System.in);
@@ -85,16 +78,36 @@ public class Game extends JFrame{
 	    comps.put(c.getIp(), c);
 	    ips.addLine(c.getName() + ": " + c.getIp());
 	}
-
+	maillistData = new DefaultListModel<Mail>();
 	gui = new Test(this);
+	
 	this.getContentPane().add(gui);
 	setupInput();
-//	addKeyListener(new Input());
+	// addKeyListener(new Input());
 	this.requestFocusInWindow();
     }
 
     public void start(){
 	messageOut("Computer System Initialized...");
+
+	Mail mail1 = new Mail(myComputer.getMailBox().getAddress(), "creator@game.com", new Date(3, 18, 97), "Welcome",
+		"Thanks for Playing this game");
+	MailBox.send(mail1, myComputer.getMailBox());
+
+	Timer timer = new Timer(0, new ActionListener(){
+	    @Override
+	    public void actionPerformed(ActionEvent e){
+		System.out.println("You have Mail!");
+		Mail mail = new Mail(myComputer.getMailBox().getAddress(), "tom.skillman@h3x.com", new Date(3, 18, 97),
+			"Work",
+			"Hi I heard you were looking for some work\n" + "Check out this lookup server on 1.2.3.4\n"
+				+ "It keeps track of some noteworthy servers you might want to check out");
+		MailBox.send(mail, myComputer.getMailBox());
+	    }
+	});
+	timer.setInitialDelay(1000 * 10);
+	timer.setRepeats(false);
+	timer.start();
 
 	while(RUNNING){
 	    if(connectedComp.getIp().equals(myComputer.getIp())){
@@ -133,22 +146,24 @@ public class Game extends JFrame{
 	    public void actionPerformed(ActionEvent e){
 		System.out.println("DOWN");
 		if(lastCommands.size() > 0){
-		    commandIndex = (commandIndex + lastCommands.size()-1) % lastCommands.size();
+		    commandIndex = (commandIndex + lastCommands.size() - 1) % lastCommands.size();
 		    gui.getInputField().setText(lastCommands.get(commandIndex));
 		}
 	    }
 	});
-	
-	//Override Tab
+
+	// Override Tab
 	gui.getInputField().getActionMap().put("cycleFile", new AbstractAction(){
 	    @Override
 	    public void actionPerformed(ActionEvent e){
 		System.out.println("TAB");
 		if(connectedComp.getCurrentDir().getChildren().size() == 0) return;
 		fileIndex = (fileIndex + 1) % connectedComp.getCurrentDir().getChildren().size();
-		int lastIndex = (fileIndex + connectedComp.getCurrentDir().getChildren().size()-1) % connectedComp.getCurrentDir().getChildren().size();
+		int lastIndex = (fileIndex + connectedComp.getCurrentDir().getChildren().size() - 1)
+			% connectedComp.getCurrentDir().getChildren().size();
 		String fileName = connectedComp.getCurrentDir().getChildren().get(fileIndex).getName();
-		String cmd = gui.getInputField().getText().replace(connectedComp.getCurrentDir().getChildren().get(lastIndex).getName(), "");
+		String cmd = gui.getInputField().getText()
+			.replace(connectedComp.getCurrentDir().getChildren().get(lastIndex).getName(), "");
 		if(gui.getInputField().getText().equals("")){
 		    gui.getInputField().setText(fileName);
 		}else{
@@ -280,33 +295,14 @@ public class Game extends JFrame{
 	return fileTree;
     }
 
-    public JList<Mail> getMail(){
-	return maillist;
+//    public static void updateMaillist(Mail e){
+//	int[] index = { e.getParent().getIndex(e) };
+//	maillistData.nodesWereInserted(e, index);
+//	gui.getMaillist().setModel(maillistData);
+//    }
+
+    public static DefaultListModel<Mail> getMailModel(){
+	return maillistData;
     }
 
-    public void updateMaillist(){
-	for(Mail p : myComputer.getMail()){
-	    maillistData.addElement(p);
-	}
-	maillist.setModel(maillistData);
-    }
-
-    private class Input extends KeyAdapter{
-	@Override
-	public void keyPressed(KeyEvent e){
-	    System.out.println("Pressed");
-	    if(lastCommands.size() > 0){
-		if(e.getID() == KeyEvent.VK_UP){
-		    System.out.println("UP");
-		    commandIndex = (commandIndex + 1) % lastCommands.size();
-		    gui.getInputField().setText(lastCommands.get(commandIndex));
-		}
-		if(e.getID() == KeyEvent.VK_DOWN){
-		    System.out.println("Down");
-		    commandIndex = (commandIndex - 1) % lastCommands.size();
-		    gui.getInputField().setText(lastCommands.get(commandIndex));
-		}
-	    }
-	}
-    }
 }

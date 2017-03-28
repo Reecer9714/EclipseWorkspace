@@ -1,13 +1,14 @@
 package hacking.main.computers;
 
-import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.tree.TreeNode;
 
-import hacking.main.*;
+import hacking.main.Game;
 import hacking.main.files.Folder;
 import hacking.main.files.TextFile;
-import hacking.main.mail.*;
+import hacking.main.mail.Mail;
+import hacking.main.mail.MailBox;
 
 public class Computer{
     private String name;
@@ -64,9 +65,6 @@ public class Computer{
 
     public TreeNode getFileRoot(){
 	return C;
-    }
-    public TreeNode getMailRoot(){
-	return box;
     }
 
     public TextFile getLog(){
@@ -133,7 +131,7 @@ public class Computer{
         return box;
     }
     
-    public ArrayList<Mail> getMail(){
+    public Vector<Mail> getMail(){
         return box.getBox();
     }
 
