@@ -1,3 +1,2 @@
 # EclipseWorkspace
-
-Hacking Information - https://github.com/Reecer9714/EclipseWorkspace/blob/master/Hacking/README.md
+[Hacking Project Readme](https://github.com/Reecer9714/EclipseWorkspace/blob/master/Hacking/README.md)
