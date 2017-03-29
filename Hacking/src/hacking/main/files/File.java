@@ -4,7 +4,7 @@ import java.util.Enumeration;
 
 import javax.swing.tree.TreeNode;
 
-public class File implements TreeNode{
+public abstract class File implements TreeNode{
     private Folder parent;
     private String name;
 
@@ -17,7 +17,7 @@ public class File implements TreeNode{
 	this.parent = f;
     }
     
-    public void open(){};
+    public abstract void open();
 
     public String getName(){
 	return name;

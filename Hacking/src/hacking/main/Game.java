@@ -24,7 +24,7 @@ public class Game extends JFrame{
     static Computer myComputer;
     static Computer connectedComp;
     private static JTree fileTree;
-    private static DefaultListModel<Mail> maillistData;
+
     private static TextFile ips;
     private static HashMap<String, Computer> comps = new HashMap<String, Computer>();
 
@@ -78,9 +78,9 @@ public class Game extends JFrame{
 	    comps.put(c.getIp(), c);
 	    ips.addLine(c.getName() + ": " + c.getIp());
 	}
-	maillistData = new DefaultListModel<Mail>();
+
 	gui = new Test(this);
-	
+
 	this.getContentPane().add(gui);
 	setupInput();
 	// addKeyListener(new Input());
@@ -111,9 +111,9 @@ public class Game extends JFrame{
 
 	while(RUNNING){
 	    if(connectedComp.getIp().equals(myComputer.getIp())){
-		messageOut("<" + myComputer.getDir().getPath() + "> ");
+		messageOut(myComputer.getDir().getPath() + "> ");
 	    }else{
-		messageOut("<[" + connectedComp.getIp() + "]:" + connectedComp.getDir().getPath() + "> ");
+		messageOut("[" + connectedComp.getIp() + "]:" + connectedComp.getDir().getPath() + "> ");
 	    }
 	    handleInput(scan.nextLine());
 	}
@@ -217,6 +217,13 @@ public class Game extends JFrame{
 	    default:
 		messageOut("Command not recognized use [help] for a list of commands");
 	}
+	messageOut("");
+	if(Game.connectedComp.getIp().equals(Game.myComputer.getIp())){
+	    Game.messageOut(Game.myComputer.getDir().getPath() + ">" + game.getLastCommand());
+	}else{
+	    Game.messageOut("[" + Game.connectedComp.getIp() + "]:" + Game.connectedComp.getDir().getPath() + "> ");
+	}
+
     }
 
     private static void addLastCommand(String s){
@@ -233,7 +240,8 @@ public class Game extends JFrame{
     public static void open(String[] line){
 	if(line.length >= 2){
 	    if(connectedComp.getDir().hasFile(line[1])){
-		messageOut(connectedComp.getDir().getFile(line[1]).toString());
+		connectedComp.getDir().getFile(line[1]).open();
+		// messageOut(connectedComp.getDir().getFile(line[1]).toString());
 	    }else{
 		messageOut("Could not find computer on " + line[1]);
 	    }
@@ -295,14 +303,12 @@ public class Game extends JFrame{
 	return fileTree;
     }
 
-//    public static void updateMaillist(Mail e){
-//	int[] index = { e.getParent().getIndex(e) };
-//	maillistData.nodesWereInserted(e, index);
-//	gui.getMaillist().setModel(maillistData);
-//    }
-
     public static DefaultListModel<Mail> getMailModel(){
-	return maillistData;
+	return gui.getMailModel();
+    }
+
+    public static Computer getMyComputer(){
+	return myComputer;
     }
 
 }

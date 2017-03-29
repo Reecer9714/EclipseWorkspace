@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.*;
+import javax.swing.event.*;
 import javax.swing.tree.TreePath;
 
 import hacking.main.files.File;
@@ -24,20 +25,24 @@ public class Test extends JPanel{
     private static JLabel cpuUseLbl;
     private static JLabel hddUseLbl;
     private static JLabel netUseLbl;
-    
+
     public static ImageIcon readMail;
     public static ImageIcon unreadMail;
 
     private Set<AWTKeyStroke> set = new HashSet<AWTKeyStroke>();
 
     private JList<Mail> maillist;
+    private static DefaultListModel<Mail> maillistData;
+
+    private Timer blinkTimer;
+    private Color defualtColor;
 
     @SuppressWarnings("serial")
     public Test(Game game){
-	
-	readMail = createImageIcon("/readMail.png","Icon to represent an email that has been read");
+
+	readMail = createImageIcon("/readMail.png", "Icon to represent an email that has been read");
 	unreadMail = createImageIcon("/unreadMail.png", "Icon to represent an email that has not been read");
-	// getContentPane().add(new Panel());
+	// Game.getContentPane().add(this);
 	this.setLayout(new BorderLayout(0, 0));
 
 	JSplitPane splitPane = new JSplitPane();
@@ -74,15 +79,6 @@ public class Test extends JPanel{
 	cmdField.addActionListener(new ActionListener(){
 	    public void actionPerformed(ActionEvent e){
 		Game.handleInput(cmdField.getText());
-		if(Game.connectedComp.getIp().equals(Game.myComputer.getIp())){
-		    Game.messageOut("<" + Game.myComputer.getDir().getPath() + ">" + game.getLastCommand());
-		}else{
-		    Game.messageOut(
-			    "<[" + Game.connectedComp.getIp() + "]:" + Game.connectedComp.getDir().getPath() + "> ");
-		}
-		// Game.messageOut(
-		// "<" + Game.getConnected().getIp() + "-" +
-		// Game.getConnected().getDir().getPath() + "> ");
 		cmdField.setText("");
 	    }
 	});
@@ -101,8 +97,52 @@ public class Test extends JPanel{
 	JPanel programs = new JPanel();
 	tabbedPane.addTab("Running", null, programs, null);
 
+	maillistData = new DefaultListModel<Mail>();
 	maillist = new JList<Mail>(Game.myComputer.getMail());
-	maillist.setModel(Game.getMailModel());
+	maillist.setModel(maillistData);
+	maillistData.addListDataListener(new ListDataListener(){
+	    @Override
+	    public void intervalAdded(ListDataEvent e){
+		if(tabbedPane.getSelectedIndex() != 1){
+		    blinkTimer = new Timer(500, new ActionListener(){
+			boolean blinkFlag = false;
+
+			@Override
+			public void actionPerformed(ActionEvent e){
+			    blink(blinkFlag);
+			    blinkFlag = !blinkFlag;
+			}
+		    });
+		    blinkTimer.start();
+		}
+	    }
+
+	    private void blink(boolean blinkFlag){
+		if(blinkFlag){
+		    tabbedPane.setBackgroundAt(1, new Color(170, 221, 242));
+		}else{
+		    tabbedPane.setBackgroundAt(1, defualtColor);
+		}
+		tabbedPane.repaint();
+	    }
+
+	    @Override
+	    public void intervalRemoved(ListDataEvent e){}
+
+	    @Override
+	    public void contentsChanged(ListDataEvent e){}
+	});
+
+	tabbedPane.addChangeListener(new ChangeListener(){
+	    @Override
+	    public void stateChanged(ChangeEvent e){
+		if(tabbedPane.getSelectedIndex() == 1){
+		    blinkTimer.stop();
+		    tabbedPane.setBackgroundAt(1, defualtColor);
+		}
+	    }
+	});
+
 	maillist.addMouseListener(new MouseAdapter(){
 	    public void mousePressed(MouseEvent e){
 		int selRow = maillist.locationToIndex(e.getPoint());
@@ -126,26 +166,6 @@ public class Test extends JPanel{
 		return c;
 	    }
 	});
-	/*
-	 * JTree Method maillist = new JTree(Game.getMailModel());
-	 * maillist.setRootVisible(false); maillist.setCellRenderer(new
-	 * DefaultTreeCellRenderer(){ private Icon readIcon =
-	 * UIManager.getIcon("FileChooser.newFolderIcon"); private Icon
-	 * unreadIcon = UIManager.getIcon("FileChooser.upFolderIcon");
-	 * @Override public Component getTreeCellRendererComponent(JTree tree,
-	 * Object value, boolean selected, boolean expanded, boolean isLeaf, int
-	 * row, boolean focused){ Component c =
-	 * super.getTreeCellRendererComponent(tree, value, selected, expanded,
-	 * isLeaf, row, focused); if(((Mail)value).isRead()) setIcon(readIcon);
-	 * else setIcon(unreadIcon); return c; } });
-	 * maillist.addMouseListener(new MouseAdapter(){ public void
-	 * mousePressed(MouseEvent e){ int selRow =
-	 * maillist.getRowForLocation(e.getX(), e.getY()); TreePath selPath =
-	 * maillist.getPathForLocation(e.getX(), e.getY()); if(selRow != -1 &&
-	 * e.getClickCount() == 2 && selPath != null){ Mail selectedFile =
-	 * (Mail)selPath.getLastPathComponent(); if(selectedFile.isLeaf()){
-	 * selectedFile.open(); } } } });
-	 */
 	tabbedPane.addTab("Mail", null, maillist, null);
 
 	JTree files = game.getTree();
@@ -162,7 +182,9 @@ public class Test extends JPanel{
 		}
 	    }
 	});
+
 	tabbedPane.addTab("Files", null, files, null);
+	defualtColor = tabbedPane.getBackgroundAt(1);
 
 	JPanel resources = new JPanel();
 	rightSide.setLeftComponent(resources);
@@ -250,6 +272,10 @@ public class Test extends JPanel{
 
     public JList<Mail> getMaillist(){
 	return maillist;
+    }
+
+    public DefaultListModel<Mail> getMailModel(){
+	return maillistData;
     }
 
 }

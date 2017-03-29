@@ -62,6 +62,12 @@ public class Computer{
 	    currentDir = home;
 	}
     }
+    
+    public void changeDir(Folder f){
+	if(currentDir.hasFile(f)){
+	    currentDir = f;
+	}else Game.messageOut("Directory " + f.getName() + " could not be found");
+    }
 
     public TreeNode getFileRoot(){
 	return C;

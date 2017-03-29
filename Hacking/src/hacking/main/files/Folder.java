@@ -23,6 +23,11 @@ public class Folder extends File{
     public void setParent(Folder f){
 	this.parent = f;
     }
+    
+    @Override
+    public void open(){
+	Game.getMyComputer().changeDir(this);
+    }
 
     public ArrayList<File> getChildren(){
 	return childs;
@@ -109,11 +114,6 @@ public class Folder extends File{
 
     @Override
     public boolean isLeaf(){
-//	if(childs.size() == 0){
-//	    return true;
-//	}else{
-//	    return false;
-//	}
 	return false;
     }
 
@@ -124,9 +124,7 @@ public class Folder extends File{
 	    files += file.getName() + ", ";
 	}
 
-	// for(String key : children.keySet()){
-	// files += key + ", ";
-	// }
 	return files;
     }
+
 }
