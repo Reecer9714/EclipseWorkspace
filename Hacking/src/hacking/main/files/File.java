@@ -7,6 +7,7 @@ import javax.swing.tree.TreeNode;
 public abstract class File implements TreeNode{
     private Folder parent;
     private String name;
+    protected String ext;
 
     public File(String n){
 	this.name = n;
@@ -15,6 +16,7 @@ public abstract class File implements TreeNode{
     public File(String n, Folder f){
 	this.name = n;
 	this.parent = f;
+	this.ext = "";
     }
     
     public abstract void open();
@@ -32,7 +34,7 @@ public abstract class File implements TreeNode{
     }
 
     public String toString(){
-	return name;
+	return name+ext;
     }
 
     @Override
@@ -68,5 +70,9 @@ public abstract class File implements TreeNode{
     @Override
     public Enumeration<File> children(){
 	return null;
+    }
+
+    public String getExt(){
+        return ext;
     }
 }

@@ -6,7 +6,8 @@ public class TextFile extends File{
     private String body;
     
     public TextFile(String n){
-	super(n+".txt");
+	super(n);
+	this.ext = ".txt";
 	body = "";
     }
 

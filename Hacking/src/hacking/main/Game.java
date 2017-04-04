@@ -10,6 +10,7 @@ import hacking.main.computers.Computer;
 import hacking.main.files.TextFile;
 import hacking.main.mail.*;
 import hacking.main.mail.Date;
+import hacking.main.programs.Program;
 
 public class Game extends JFrame{
     private static final long serialVersionUID = 1L;
@@ -31,6 +32,8 @@ public class Game extends JFrame{
     private static LinkedList<String> lastCommands = new LinkedList<String>();
     private static int commandIndex = 0;
     private static int fileIndex = 0;
+
+    public static Program currentProgram;
 
     // private static final String TAB = "\t";
     // private static double cpuUse;
@@ -179,10 +182,21 @@ public class Game extends JFrame{
     }
 
     public static void handleInput(String s){
-	System.out.println(game.isFocused());
 	addLastCommand(s);
 	String[] command = s.split(" ");
 	command[0] = command[0].toLowerCase();
+	
+	if(currentProgram != null){
+	    if(command[0].equals("exit")){ 
+		currentProgram.exit();
+		return;
+	    }
+	    currentProgram.handleInput(command[0]);
+	    return;
+	}
+	
+	System.out.println(game.isFocused());
+	
 	switch(command[0]){
 	    case "exit":
 		exit();
@@ -243,7 +257,7 @@ public class Game extends JFrame{
 		connectedComp.getDir().getFile(line[1]).open();
 		// messageOut(connectedComp.getDir().getFile(line[1]).toString());
 	    }else{
-		messageOut("Could not find computer on " + line[1]);
+		messageOut("Could not find file " + line[1]);
 	    }
 	}else{
 	    messageOut("Usage: open (file)");

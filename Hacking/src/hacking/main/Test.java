@@ -119,7 +119,7 @@ public class Test extends JPanel{
 
 	    private void blink(boolean blinkFlag){
 		if(blinkFlag){
-		    tabbedPane.setBackgroundAt(1, new Color(170, 221, 242));
+		    tabbedPane.setBackgroundAt(1, new Color(242, 230, 170));//170, 221, 242 blue
 		}else{
 		    tabbedPane.setBackgroundAt(1, defualtColor);
 		}

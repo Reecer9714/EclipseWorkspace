@@ -6,26 +6,26 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 
-import hacking.main.programs.Program;
-import hacking.main.programs.Terminal;
+import hacking.main.programs.gui.Terminal;
 
 public class ReaperOS extends JFrame{
 
     private static final long serialVersionUID = 1L;
+    private GUIGame game;
 
     /**
      * Creates new form ReaperOS
      */
-    public ReaperOS(){
+    public ReaperOS(GUIGame game){
+	this.game = game;
 	initComponents();
     }
 
     /**
      * This method is called from within the constructor to initialize the form.
-     * https://docs.oracle.com/javase/tutorial/uiswing/components/internalframe.
-     * html
      */
     private void initComponents(){
+	setFocusable(true);
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	setMinimumSize(new Dimension(720, 640));
@@ -34,33 +34,19 @@ public class ReaperOS extends JFrame{
 	desktop = new JDesktopPane();
 	menubar = new JMenuBar();
 	startmenu = new JMenu();
-	terminal = new Terminal(this, (int)(desktop.getWidth() * 0.5),  (int)(desktop.getHeight() * 0.5));
-
-	// desktop.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-	// desktop.setLayout(new FlowLayout());
-
+	
 	getContentPane().add(desktop, BorderLayout.CENTER);
-
 	setJMenuBar(menubar);
 	startmenu.setText("Start");
 	menubar.add(startmenu);
+	
+	//Setup Programs
+	terminal = new Terminal(this, (int)(getWidth() * 0.5),  (int)(getHeight() * 0.5));
 
 	pack();
     }
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]){
-	/* Set the Nimbus look and feel */
-	// <editor-fold defaultstate="collapsed" desc=" Look and feel setting
-	// code (optional) ">
-	/*
-	 * If Nimbus (introduced in Java SE 6) is not available, stay with the
-	 * default look and feel. For details see
-	 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.
-	 * html
-	 */
 	try{
 	    for(UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()){
 		if("Nimbus".equals(info.getName())){
@@ -85,7 +71,10 @@ public class ReaperOS extends JFrame{
 	/* Create and display the form */
 	EventQueue.invokeLater(new Runnable(){
 	    public void run(){
-		new ReaperOS().setVisible(true);
+		GUIGame game = new GUIGame();
+		ReaperOS os = new ReaperOS(game);
+			 os.setVisible(true);
+			 os.requestFocusInWindow();
 	    }
 	});
     }
@@ -107,5 +96,9 @@ public class ReaperOS extends JFrame{
 
     public JMenu getStartmenu(){
 	return startmenu;
+    }
+
+    public GUIGame getGame(){
+	return game;
     }
 }
