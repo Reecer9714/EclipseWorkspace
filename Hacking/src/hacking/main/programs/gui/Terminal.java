@@ -16,6 +16,7 @@ public class Terminal extends GUIProgram{
 
     private static LinkedList<String> lastCommands = new LinkedList<String>();
     private Set<AWTKeyStroke> set = new HashSet<AWTKeyStroke>();
+    private ImageIcon icon;
     private static int commandIndex = 0;
     private static int fileIndex = 0;
 
@@ -27,7 +28,6 @@ public class Terminal extends GUIProgram{
 
 	cmdArea = new JTextArea();
 	cmdArea.setMinimumSize(new Dimension(width, (int)(height * 0.9)));
-	// cmdArea.setMargin(new Insets(3, 3, 3, 3));
 	scrollPane.setViewportView(cmdArea);
 	cmdArea.setFont(new Font("Lucida Console", Font.PLAIN, 12));
 	cmdArea.setEditable(false);
@@ -35,10 +35,8 @@ public class Terminal extends GUIProgram{
 	cmdArea.setForeground(Color.WHITE);
 
 	cmdField = new JTextField();
-	// Tabbed now does not change focus
 	cmdField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, set);
 	cmdField.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, set);
-	// cmdField.setMargin(new Insets(4, 4, 4, 4));
 	cmdField.setMinimumSize(new Dimension(width, (int)(height * 0.1)));
 	cmdField.setFont(new Font("Lucida Console", Font.PLAIN, 12));
 	cmdField.addActionListener(new ActionListener(){
@@ -52,16 +50,18 @@ public class Terminal extends GUIProgram{
 	cmdField.setForeground(Color.WHITE);
 	getContentPane().add(cmdField, BorderLayout.SOUTH);
 	
+	icon = new ImageIcon(GUIGame.class.getResource("/terminal.png"), "Desktop Icon");
+	
 	setupInput();
-//	pack();
+	// pack();
     }
-    
+
     @Override
     public void open(){
 	super.open();
 	messageOut(game.getMyComputer().getDir().getPath() + "> ");
     }
-    
+
     @Override
     public void close(){
 	super.close();
@@ -84,7 +84,7 @@ public class Terminal extends GUIProgram{
 	    break;
 	    case "dir":
 		game.getConnectedComp().getDir().addFolder(command);
-	    break; // TODO: fix error when not supplying folder nameconn
+	    break;
 	    case "ls":
 		messageOut(game.getConnectedComp().getDir().getContents());
 	    break;
@@ -234,6 +234,11 @@ public class Terminal extends GUIProgram{
 		}
 	    }
 	});
+    }
+
+    @Override
+    public ImageIcon getIcon(){
+	return icon;
     }
 
 }

@@ -1,20 +1,25 @@
 package hacking.main;
 
 import java.awt.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.*;
 
-import hacking.main.programs.gui.Terminal;
+import hacking.main.programs.gui.*;
 
 public class ReaperOS extends JFrame{
 
     private static final long serialVersionUID = 1L;
     private GUIGame game;
-
+    private JDesktopPane desktop;
+    private JMenu startmenu;
+    private JMenuBar menubar;
+    private Terminal terminal;
+    private WebBrowser webbrowser;
+    private FileBrowser filebrowser;
+    private TextEditor texteditor;
     /**
      * Creates new form ReaperOS
+     * icons https://www.iconfinder.com/iconsets/onebit
      */
     public ReaperOS(GUIGame game){
 	this.game = game;
@@ -34,56 +39,20 @@ public class ReaperOS extends JFrame{
 	desktop = new JDesktopPane();
 	menubar = new JMenuBar();
 	startmenu = new JMenu();
-	
+
 	getContentPane().add(desktop, BorderLayout.CENTER);
 	setJMenuBar(menubar);
 	startmenu.setText("Start");
 	menubar.add(startmenu);
-	
-	//Setup Programs
-	terminal = new Terminal(this, (int)(getWidth() * 0.5),  (int)(getHeight() * 0.5));
+
+	// Setup Programs
+	terminal = new Terminal(this, (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
+	webbrowser = new WebBrowser(this, (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
+	filebrowser = new FileBrowser(this, (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
+	texteditor = new TextEditor(this, (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
 
 	pack();
     }
-
-    public static void main(String args[]){
-	try{
-	    for(UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()){
-		if("Nimbus".equals(info.getName())){
-		    UIManager.setLookAndFeel(info.getClassName());
-		    break;
-		}
-	    }
-	}
-	catch(ClassNotFoundException ex){
-	    Logger.getLogger(ReaperOS.class.getName()).log(Level.SEVERE, null, ex);
-	}
-	catch(InstantiationException ex){
-	    Logger.getLogger(ReaperOS.class.getName()).log(Level.SEVERE, null, ex);
-	}
-	catch(IllegalAccessException ex){
-	    Logger.getLogger(ReaperOS.class.getName()).log(Level.SEVERE, null, ex);
-	}
-	catch(UnsupportedLookAndFeelException ex){
-	    Logger.getLogger(ReaperOS.class.getName()).log(Level.SEVERE, null, ex);
-	}
-
-	/* Create and display the form */
-	EventQueue.invokeLater(new Runnable(){
-	    public void run(){
-		GUIGame game = new GUIGame();
-		ReaperOS os = new ReaperOS(game);
-			 os.setVisible(true);
-			 os.requestFocusInWindow();
-	    }
-	});
-    }
-
-    // Variables declaration
-    private JDesktopPane desktop;
-    private Terminal terminal;
-    private JMenu startmenu;
-    private JMenuBar menubar;
 
     // End of variables declaration
     public JMenuBar getMenubar(){
@@ -100,5 +69,15 @@ public class ReaperOS extends JFrame{
 
     public GUIGame getGame(){
 	return game;
+    }
+    
+    public ImageIcon createImageIcon(String path, String description){
+	java.net.URL imgURL = getClass().getResource(path);
+	if(imgURL != null){
+	    return new ImageIcon(imgURL, description);
+	}else{
+	    System.err.println("Couldn't find file: " + path);
+	    return null;
+	}
     }
 }
