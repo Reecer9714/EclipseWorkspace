@@ -12,7 +12,8 @@ public class TextFile extends File{
     }
 
     public TextFile(GUIGame g, String n, Folder f){
-	super(g, n + ".txt", f);
+	super(g, n, f);
+	this.ext = ".txt";
 	body = "";
     }
 
@@ -38,4 +39,5 @@ public class TextFile extends File{
     public String getContents(){
 	return body;
     }
+    
 }
