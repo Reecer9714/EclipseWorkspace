@@ -7,15 +7,19 @@ import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
 import hacking.main.ReaperOS;
+import hacking.main.programs.Program;
 
 public abstract class GUIProgram extends JInternalFrame{
     protected ReaperOS os;
-    private JButton barButton;
+    //private JButton barButton;
+    private Program exe;
     protected JPanel panel;
-    private boolean open;
+    //private boolean open;
 
     public GUIProgram(ReaperOS os, String title, ImageIcon icon, int width, int height){
 	super(title, true, true, true, true);
+	exe = new Program(os.getGame(), this, title);
+	os.getGame().getMyComputer().getDir().getFolder("Programs").addFile(exe);
 	this.os = os;
 	Dimension d = new Dimension(width, height);
 	setPreferredSize(d);
@@ -54,12 +58,12 @@ public abstract class GUIProgram extends JInternalFrame{
     }
 
     public void open(){
-	open = true;
+	//open = true;
 	this.show();
     }
 
     public void close(){
-	open = false;
+	//open = false;
 	this.hide();
     }
 
