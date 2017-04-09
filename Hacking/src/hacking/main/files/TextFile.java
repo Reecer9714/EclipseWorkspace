@@ -1,24 +1,26 @@
 package hacking.main.files;
 
-import hacking.main.Game;
+import hacking.main.GUIGame;
 
 public class TextFile extends File{
     private String body;
-    
-    public TextFile(String n){
-	super(n);
+
+    public TextFile(GUIGame g, String n){
+	super(g, n);
 	this.ext = ".txt";
 	body = "";
     }
 
-    public TextFile(String n, Folder f){
-	super(n + ".txt", f);
+    public TextFile(GUIGame g, String n, Folder f){
+	super(g, n + ".txt", f);
 	body = "";
     }
-    
+
     @Override
     public void open(){
-	Game.messageOut(getContents());
+	game.getOS().getTexteditor().open();
+	game.getOS().getTexteditor().load(this);
+	//game.messageOut(getContents());
     }
 
     public String getBody(){
@@ -34,6 +36,6 @@ public class TextFile extends File{
     }
 
     public String getContents(){
-	return getName() + ":\n" + body;
+	return body;
     }
 }

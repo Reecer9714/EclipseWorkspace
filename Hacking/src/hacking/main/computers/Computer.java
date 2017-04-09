@@ -4,13 +4,14 @@ import java.util.Vector;
 
 import javax.swing.tree.TreeNode;
 
-import hacking.main.Game;
+import hacking.main.GUIGame;
 import hacking.main.files.Folder;
 import hacking.main.files.TextFile;
 import hacking.main.mail.Mail;
 import hacking.main.mail.MailBox;
 
 public class Computer{
+    private GUIGame game;
     private String name;
     private String ip;
     private double cpu;// cpu speed
@@ -22,21 +23,21 @@ public class Computer{
     private TextFile log;
     private Folder currentDir;
 
-    public Computer(String n, String s){
+    public Computer(GUIGame g, String n, String s){
 	// create a better random creation
-	this(n, s, Math.random() + 0.5, Math.random() + 0.5, Math.random() + 0.5);
+	this(g, n, s, Math.random() + 0.5, Math.random() + 0.5, Math.random() + 0.5);
     }
 
-    public Computer(String n, String s, double cp, double hd, double nt){
+    public Computer(GUIGame g, String n, String s, double cp, double hd, double nt){
 	setName(n);
 	ip = s;
 	setCpu(cp);
 	setHdd(hd);
 	setNet(nt);
 
-	C = new Folder("C:");
-	home = new Folder("Home");
-	log = new TextFile("log");
+	C = new Folder(g, "C:");
+	home = new Folder(g, "Home");
+	log = new TextFile(g, "log");
 
 	C.addFolder(home);
 	C.addFile(log);
@@ -45,8 +46,8 @@ public class Computer{
 	home.addFolder("Documents");
 	// home.addFile(log);
 	currentDir = home;
-	
-	box = new MailBox(name + "@yougle.com");
+
+	box = new MailBox(g, name + "@yougle.com");
     }
 
     public void changeDir(String[] command){
@@ -56,17 +57,17 @@ public class Computer{
 	    }else{
 		if(currentDir.hasFile(command[1]))
 		    currentDir = (Folder)currentDir.getFile(command[1]);
-		else Game.messageOut("Directory " + command[1] + " could not be found");
+		else game.getOS().getTerminal().messageOut("Directory " + command[1] + " could not be found");
 	    }
 	}else{
 	    currentDir = home;
 	}
     }
-    
+
     public void changeDir(Folder f){
 	if(currentDir.hasFile(f)){
 	    currentDir = f;
-	}else Game.messageOut("Directory " + f.getName() + " could not be found");
+	}else game.getOS().getTerminal().messageOut("Directory " + f.getName() + " could not be found");
     }
 
     public TreeNode getFileRoot(){
@@ -134,14 +135,14 @@ public class Computer{
     }
 
     public MailBox getMailBox(){
-        return box;
+	return box;
     }
-    
+
     public Vector<Mail> getMail(){
-        return box.getBox();
+	return box.getBox();
     }
 
     public Folder getCurrentDir(){
-        return currentDir;
+	return currentDir;
     }
 }

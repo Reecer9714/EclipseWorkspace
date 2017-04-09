@@ -1,25 +1,22 @@
 package hacking.main.programs.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
-import hacking.main.GUIGame;
 import hacking.main.ReaperOS;
 
 public abstract class GUIProgram extends JInternalFrame{
-
+    protected ReaperOS os;
     private JButton barButton;
     protected JPanel panel;
     private boolean open;
 
-    public GUIProgram(ReaperOS os, String title, int width, int height){
+    public GUIProgram(ReaperOS os, String title, ImageIcon icon, int width, int height){
 	super(title, true, true, true, true);
+	this.os = os;
 	Dimension d = new Dimension(width, height);
 	setPreferredSize(d);
 	setMinimumSize(d);
@@ -50,7 +47,7 @@ public abstract class GUIProgram extends JInternalFrame{
 	os.getMenubar().add(barButton);
 	*/
 	
-	DesktopButton button = new DesktopButton(this, title);
+	DesktopButton button = new DesktopButton(this, title, icon);
 	os.getDesktop().add(button);
 
 	os.getDesktop().add(this);
@@ -66,5 +63,4 @@ public abstract class GUIProgram extends JInternalFrame{
 	this.hide();
     }
 
-    public abstract ImageIcon getIcon();
 }

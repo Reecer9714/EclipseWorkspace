@@ -12,9 +12,10 @@ public class TextEditor extends GUIProgram{
 
     private JTextArea textArea;
     private ImageIcon icon;
+    private TextFile currentFile;
 
-    public TextEditor(ReaperOS os, int width, int height){
-	super(os, "TextEditor", width, height);
+    public TextEditor(ReaperOS os, ImageIcon icon,  int width, int height){
+	super(os, "TextEditor", icon, width, height);
 	JMenuBar menuBar_1 = new JMenuBar();
 	setJMenuBar(menuBar_1);
 	
@@ -36,17 +37,23 @@ public class TextEditor extends GUIProgram{
 	icon = new ImageIcon(GUIGame.class.getResource("/texteditor.png"), "Desktop Icon");
     }
     
+    @Override
+    public void close(){
+	textArea.setText("");
+	currentFile = null;
+    }
+    
     public void load(TextFile file){
 	textArea.setText(file.getContents());
+	currentFile = file;
     }
     
     public void save(){
 	//TODO: create new TextFile and put in Folder
-    }
-
-    @Override
-    public ImageIcon getIcon(){
-	return icon;
+	if(currentFile == null){
+	    //TODO: add popup to select where to save file and file name
+	    //currentFile = new TextFile(os, title, null);
+	}
     }
 
 }

@@ -20,8 +20,8 @@ public class Terminal extends GUIProgram{
     private static int commandIndex = 0;
     private static int fileIndex = 0;
 
-    public Terminal(ReaperOS os, int width, int height){
-	super(os, "Terminal", width, height);
+    public Terminal(ReaperOS os, ImageIcon icon, int width, int height){
+	super(os, "Terminal", icon, width, height);
 	this.game = os.getGame();
 	JScrollPane scrollPane = new JScrollPane();
 	getContentPane().add(scrollPane, BorderLayout.CENTER);
@@ -234,11 +234,6 @@ public class Terminal extends GUIProgram{
 		}
 	    }
 	});
-    }
-
-    @Override
-    public ImageIcon getIcon(){
-	return icon;
     }
 
 }

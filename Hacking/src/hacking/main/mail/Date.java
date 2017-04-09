@@ -2,7 +2,7 @@ package hacking.main.mail;
 
 public class Date{
     private int month, day, year;
-    
+
     public Date(int m, int d, int y){
 	this.month = m;
 	this.day = d;
@@ -10,29 +10,29 @@ public class Date{
     }
 
     public int getMonth(){
-        return month;
+	return month;
     }
 
     public void setMonth(int month){
-        this.month = month;
+	this.month = month;
     }
 
     public int getDay(){
-        return day;
+	return day;
     }
 
     public void setDay(int day){
-        this.day = day;
+	this.day = day;
     }
 
     public int getYear(){
-        return year;
+	return year;
     }
 
     public void setYear(int year){
-        this.year = year;
+	this.year = year;
     }
-    
+
     @Override
     public String toString(){
 	return String.format("%2d/%2d/%2d", month, day, year);

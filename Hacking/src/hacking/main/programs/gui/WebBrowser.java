@@ -27,8 +27,8 @@ public class WebBrowser extends GUIProgram{
     //add refresh
     private ImageIcon icon;
 
-    public WebBrowser(ReaperOS os, int width, int height){
-	super(os, "WebBrowser", width, height);
+    public WebBrowser(ReaperOS os, ImageIcon icon, int width, int height){
+	super(os, "WebBrowser", icon, width, height);
 	urlBar = new JTextField();
 	urlBar.addActionListener(new UrlBarHandler());
 	getContentPane().add(urlBar, BorderLayout.NORTH);
@@ -51,7 +51,7 @@ public class WebBrowser extends GUIProgram{
     @Override
     public void close(){
 	super.close();
-	webEngine.load("http://www.google.com");// start page
+	loadPage("http://www.google.com");// start page
     }
 
     public void loadCustomPage(String HTMLString){
@@ -108,11 +108,6 @@ public class WebBrowser extends GUIProgram{
 		panel.setScene(scene);
 	    }
 	});
-    }
-
-    @Override
-    public ImageIcon getIcon(){
-	return icon;
     }
 
 }

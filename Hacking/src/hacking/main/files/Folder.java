@@ -4,29 +4,29 @@ import java.util.ArrayList;
 
 import javax.swing.tree.TreeNode;
 
-import hacking.main.Game;
+import hacking.main.GUIGame;
 
 public class Folder extends File{
     private Folder parent;
     private ArrayList<File> childs = new ArrayList<File>();
     // private HashMap<String, File> children = new HashMap<String, File>();
 
-    public Folder(String s){
-	this(s, null);
+    public Folder(GUIGame g, String s){
+	this(g, s, null);
     }
 
-    public Folder(String s, Folder par){
-	super(s);
+    public Folder(GUIGame g, String s, Folder par){
+	super(g, s);
 	this.parent = par;
     }
 
     public void setParent(Folder f){
 	this.parent = f;
     }
-    
+
     @Override
     public void open(){
-	Game.getMyComputer().changeDir(this);
+	game.getMyComputer().changeDir(this);
     }
 
     public ArrayList<File> getChildren(){
@@ -48,19 +48,19 @@ public class Folder extends File{
 	if(!this.hasFile(f)){
 	    childs.add(f);
 	    f.setParent(this);
-	}else Game.messageOut("There is already a file named " + f.getName());
+	}else game.getOS().getTerminal().messageOut("There is already a file named " + f.getName());
     }
 
     public void addFolder(String[] command){
 	if(command.length < 2){
-	    Game.messageOut("Usage: dir [folder]");
+	    game.getOS().getTerminal().messageOut("Usage: dir [folder]");
 	    return;
 	}
 	this.addFolder(command[1]);
     }
 
     public void addFolder(String s){
-	Folder f = new Folder(s, this);
+	Folder f = new Folder(game, s, this);
 	this.addFolder(f);
     }
 
@@ -68,7 +68,7 @@ public class Folder extends File{
 	if(!this.hasFile(f)){
 	    childs.add(f);
 	    f.setParent(this);
-	}else Game.messageOut("There is already a folder named " + f.getName());
+	}else game.getOS().getTerminal().messageOut("There is already a folder named " + f.getName());
     }
 
     public boolean hasFile(File f){
@@ -89,7 +89,7 @@ public class Folder extends File{
 
     @Override
     public TreeNode getChildAt(int childIndex){
-	return childs.get(childIndex);// TODO:
+	return childs.get(childIndex);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class Folder extends File{
 
     @Override
     public int getIndex(TreeNode node){
-	return childs.indexOf(node);// TODO:
+	return childs.indexOf(node);
     }
 
     @Override
