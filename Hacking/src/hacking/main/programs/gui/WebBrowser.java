@@ -25,7 +25,6 @@ public class WebBrowser extends GUIProgram{
     private WebEngine webEngine;
     //add back and forth buttons
     //add refresh
-    private ImageIcon icon;
 
     public WebBrowser(ReaperOS os, ImageIcon icon, int width, int height){
 	super(os, "WebBrowser", icon, width, height);
@@ -44,8 +43,6 @@ public class WebBrowser extends GUIProgram{
 		browser.setMinSize(panel.getWidth(), panel.getHeight());
 	    }
 	});
-	
-	icon = new ImageIcon(GUIGame.class.getResource("/webbrowser.png"), "Desktop Icon");
     }
     
     @Override

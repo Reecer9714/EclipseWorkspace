@@ -12,8 +12,6 @@ import hacking.main.files.File;
 
 public class FileBrowser extends GUIProgram{
 
-    private ImageIcon icon;
-
     public FileBrowser(ReaperOS os, ImageIcon icon, int width, int height){
 	super(os, "FileBrowser", icon, width, height);
 	JTree tree = new JTree(os.getGame().getMyComputer().getFileRoot());

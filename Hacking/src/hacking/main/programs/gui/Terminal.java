@@ -16,7 +16,6 @@ public class Terminal extends GUIProgram{
 
     private static LinkedList<String> lastCommands = new LinkedList<String>();
     private Set<AWTKeyStroke> set = new HashSet<AWTKeyStroke>();
-    private ImageIcon icon;
     private static int commandIndex = 0;
     private static int fileIndex = 0;
 
@@ -49,8 +48,6 @@ public class Terminal extends GUIProgram{
 	cmdField.setBackground(Color.BLACK);
 	cmdField.setForeground(Color.WHITE);
 	getContentPane().add(cmdField, BorderLayout.SOUTH);
-	
-	icon = new ImageIcon(GUIGame.class.getResource("/terminal.png"), "Desktop Icon");
 	
 	setupInput();
 	// pack();
