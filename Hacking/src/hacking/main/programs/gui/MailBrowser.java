@@ -7,7 +7,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 
-import hacking.main.GUIGame;
 import hacking.main.ReaperOS;
 import hacking.main.mail.Mail;
 
