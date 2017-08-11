@@ -29,11 +29,11 @@ public enum Tile
         this.details = details;
     }
 
-	public boolean isGround() {
-		return this != WALL && this != BOUNDS;
-	}
+    public boolean isGround() {
+	return this != WALL && this != BOUNDS;
+    }
 
-	public boolean isDiggable() {
-	    return this == Tile.WALL;
-	}
+    public boolean isDiggable() {
+        return this == Tile.WALL;
+    }
 }
