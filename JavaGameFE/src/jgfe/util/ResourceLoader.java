@@ -54,16 +54,8 @@ public class ResourceLoader{
     // Font
     // Animation
 
-    public static Map<String, Resource> getResources(){
-	return resources;
-    }
-
-    protected Map<String, Resource> load(){
-	while(!toBeLoaded.isEmpty()){
-
-	    // Resource r = new Resource();
-	}
-	return resources;
+    public static Resource getResource(String name){
+	return resources.get(name);
     }
 
 }

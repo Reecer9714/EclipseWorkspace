@@ -2,14 +2,28 @@ package jgfe.gfx;
 
 public class Pixel {
 	
-	public static int BLACK = 0xff000000;
-	public static int WHITE = 0xffffffff;
-	public static int RED = 0xffff0000;
-	public static int BLUE = 0xff0000ff;
-	public static int GREEN = 0xff00ff00;
+	public static final int DEBUG = 0xffff00ff;
+	public static final int BLACK = 0xff000000;
+	public static final int WHITE = 0xffffffff;
+	public static final int RED = 0xffff0000;
+	public static final int BLUE = 0xff0000ff;
+	public static final int GREEN = 0xff00ff00;
+	
+	public static void main(String[] args){
+	    int test = WHITE;
+	    System.out.println("" + test);
+	    test = setAlpha(test, 255/2);
+	    System.out.println("" + test);
+	    test = setAlpha(test, 255);
+	    System.out.println("" + test);
+	}
 	
 	public static float getAlpha(int color){
 		return (0xff & (color >> 24)) / 255f;
+	}
+	
+	public static int setAlpha(int color, int a){
+	    	return (color & 0x00ffffff) | (a  << 24);
 	}
 	
 	public static float getRed(int color){
@@ -26,9 +40,9 @@ public class Pixel {
 	
 	public static int getColor(float a, float r, float g, float b){
 		return ((int)(a * 255f + 0.5f) << 24 |
-				(int)(r * 255f + 0.5f) << 16 |
-				(int)(g * 255f + 0.5f) << 8 |
-				(int)(b * 255f + 0.5f) );
+			(int)(r * 255f + 0.5f) << 16 |
+			(int)(g * 255f + 0.5f) << 8 |
+			(int)(b * 255f + 0.5f) );
 	}
 	
 	public static int getColor(int a, int r, int g, int b){

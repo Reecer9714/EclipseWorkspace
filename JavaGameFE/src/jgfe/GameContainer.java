@@ -1,14 +1,17 @@
 package jgfe;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 import jgfe.gfx.Pixel;
+import jgfe.gui.GUIContainer;
 
 public class GameContainer implements Runnable{
     private Thread thread;
     private AbstractGame game;
     private Window window;
+    private GUIContainer gui;
     private Renderer renderer;
     private Input input;
 
@@ -27,6 +30,7 @@ public class GameContainer implements Runnable{
     private boolean isRunning = false;
 
     private List<AbstractGameState> gameStates = new ArrayList<AbstractGameState>();
+    private Physics physics;
 
     public GameContainer(AbstractGame game){
 	this.game = game;
@@ -41,6 +45,8 @@ public class GameContainer implements Runnable{
 	if(isRunning) return;
 	if(debug) System.out.println("Starting Game...");
 	window = new Window(this);
+	gui = new GUIContainer();
+	physics = new Physics();
 	renderer = new Renderer(this);
 	input = new Input(this);
 
@@ -79,8 +85,10 @@ public class GameContainer implements Runnable{
 
 	    while(unproccessedTime >= frameCap){
 		game.update(this, (float)frameCap);
+		physics.update();
+		gui.update(this, (float)frameCap);
 		input.update();
-		window.getCamera().update((float)frameCap);
+		window.getCamera().update(this, (float)frameCap);
 		unproccessedTime -= frameCap;
 		render = true;
 
@@ -94,16 +102,21 @@ public class GameContainer implements Runnable{
 	    if(render){
 		if(clearScreen) renderer.clear();
 		game.render(this, renderer);
+		
 
 		if(lightingEnabled || dynamicLights){
 		    renderer.drawLightArray();
 		    renderer.flushMaps();
 		}
-		renderer.setTranslate(false);
-		if(debug) renderer.drawGUIString("FPS: " + fps, Pixel.WHITE, 0, 0);
-		renderer.setTranslate(false);
-
-		window.update();
+		
+		//BufferedImage firstPass = window.renderBuffer();
+		
+		//gui
+		//gui.render(this, renderer);
+		renderer.drawGUIString("FPS: " + fps, Pixel.WHITE, 0, 0);
+		
+		//window.renderImage(firstPass);
+		window.render();
 		frames++;
 	    }else{
 		try{

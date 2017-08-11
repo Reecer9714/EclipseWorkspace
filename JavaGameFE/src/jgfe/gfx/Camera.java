@@ -1,19 +1,15 @@
 package jgfe.gfx;
 
-import jgfe.Window;
+import jgfe.entity.GameObject;
+import jgfe.GameContainer;
 
 public class Camera{
-
+    float offX, offY;
     int camX, camY;
     int camWidth, camHeight;
-    Window window;
+    private GameObject target;
 
-    public Camera(Window window){
-	this(window,640,480);
-    }
-
-    public Camera(Window window, int w, int h){
-	this.window = window;
+    public Camera(int w, int h){
 	camX = 0;
 	camY = 0;
 	camWidth = w;
@@ -64,10 +60,52 @@ public class Camera{
     public void setHeight(int camHeight){
 	this.camHeight = camHeight;
     }
+    
+    public float getOffX(){
+        return offX;
+    }
 
-    public void update(float delta){
-	window.getGameContainer().getRenderer().setTransX((int)(camX *delta));
-	window.getGameContainer().getRenderer().setTransY((int)(camY *delta));
+    public void setOffX(float offX){
+        this.offX = offX;
+    }
+
+    public float getOffY(){
+        return offY;
+    }
+
+    public void setOffY(float offY){
+        this.offY = offY;
+    }
+
+    public void update(GameContainer gc, float delta){
+	
+	float targetX;
+	float targetY;
+	
+	if(target != null){
+	    targetX = (target.getX() - camWidth /2);
+	    targetY = (target.getY() - camHeight /2);
+	}else{
+	    targetX = (camX + camWidth /2) - gc.getWidth() / 2;
+	    targetY = (camY + camHeight /2) - gc.getHeight() / 2;
+	}
+	
+	offX -= delta * (offX - targetX);
+	offY -= delta * (offY - targetY);
+	gc.getRenderer().setTransX((int)offX);
+	gc.getRenderer().setTransY((int)offY);
+    }
+    
+    public String toString(){
+	return camX + ", " + camY + " : " + camWidth + ", " + camHeight;
+    }
+
+    public GameObject getTarget(){
+        return target;
+    }
+
+    public void setTarget(GameObject target){
+        this.target = target;
     }
 
 }

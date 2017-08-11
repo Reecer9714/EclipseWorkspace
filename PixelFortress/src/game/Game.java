@@ -22,15 +22,14 @@ public class Game extends AbstractGame{
 	random = new Random();
 	gameObjects = new NaturalSortedList<GameObject>();
 	loader = new ResourceLoader();
-	loader.loadTileSheet("human", "/images/human.png", 1, 2);
+	loader.loadTileSheet("human", "animals.png", 1, 2);
     }
 
     @Override
     public void init(GameContainer gc){
 	world = new World(this, width, height);
-	cam = gc.getWindow().getCamera();
-	cam.setWidth(740 / 2);
-	cam.setHeight(480 / 2);
+	//cam = new Camera(740, 480);
+	
 	player = new Player(world.width / 2, world.height / 2, ObjectColor.PLAYER.color);
 	gameObjects.add(player);
     }
@@ -38,9 +37,9 @@ public class Game extends AbstractGame{
     @Override
     public void update(GameContainer gc, float delta){
 	player.update(gc, delta);
-	cam.centerOn((int)(player.x), (int)(player.y));
-	System.out.println(" Cam: " + cam.getCenterX() + " " + cam.getCenterY() + " Player: " + player.getX() + " "
-		+ player.getY());
+	//cam.centerOn((int)(player.x), (int)(player.y));
+	//System.out.println(" Cam: " + cam.getCenterX() + " " + cam.getCenterY() + " Player: " + player.getX() + " "
+	//	+ player.getY());
     }
 
     @Override

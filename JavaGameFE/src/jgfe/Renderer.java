@@ -17,7 +17,7 @@ public class Renderer{
     private Font font = Font.STANDARD;
     private int ambientColor = Pixel.getColor(0.5f, 0.1f, 0.1f, 0.1f);
     private int voidColor = Pixel.getColor(1, 0, 0, 0);
-    private int transColor = Pixel.getColor(1, 1, 0, 1);
+    private int transColor = Pixel.DEBUG;
 
     private int transX, transY;
     private boolean translate = true;
@@ -37,20 +37,30 @@ public class Renderer{
     public void setPixel(int x, int y, int color){
 	setPixel(x, y, color, ShadowType.NONE);
     }
+    
+    public void setPixelTrans(int x, int y, int color, int trans){
+	setPixel(x, y, Pixel.setAlpha(color, trans));
+    }
 
     public void setPixel(int x, int y, int color, ShadowType shadowType){
-	x -= transX;
-	y -= transY;
+	if(translate){
+	    x -= transX;
+	    y -= transY;
+	}
 
-	if((x < 0 || x >= width || y < 0 || y >= height) || color == transColor || color == 0x00) return;
+	if((x < 0 || x >= width || y < 0 || y >= height) || color == transColor || color == Pixel.BLACK) return;
+	if(Pixel.getBlue(color) == Pixel.getBlue(transColor) && Pixel.getRed(color) == Pixel.getRed(transColor) &&
+	   Pixel.getGreen(color) == Pixel.getGreen(transColor)) return;
 
 	pixels[x + (y * width)] = color;
 	shadowMap[x + (y * width)] = shadowType;
     }
 
     public void setLightMap(int x, int y, int color){
-	x -= transX;
-	y -= transY;
+	if(translate){
+	    x -= transX;
+	    y -= transY;
+	}
 
 	if((x < 0 || x >= width || y < 0 || y >= height)) return;
 
@@ -59,8 +69,10 @@ public class Renderer{
     }
 
     public ShadowType getLightBlock(int x, int y){
-	x -= transX;
-	y -= transY;
+	if(translate){
+	    x -= transX;
+	    y -= transY;
+	}
 
 	if(x < 0 || x >= width || y < 0 || y >= height) return ShadowType.TOTAL;
 	return shadowMap[x + y * width];
@@ -256,8 +268,26 @@ public class Renderer{
 	drawFillRect(offX, offY, w, h, color, ShadowType.NONE);
     }
     
-    //Get and Sets =======================================
+    public void drawRect(int offX, int offY, int w, int h, int color){
+	drawFillRect(offX, offY, w, h, color, ShadowType.NONE);
+    }
     
+    public void drawGUIString(String string, int color, int x, int y){
+	translate = false;
+	drawString(string, color, gc.getWindow().getCamera().getX() + x, gc.getWindow().getCamera().getX() + y);
+	translate = true;
+    }
+
+    public void drawImageTrans(Image image, int offX, int offY, int trans){
+	for(int x = 0; x < image.getWidth(); x++){
+	    for(int y = 0; y < image.getHeight(); y++){
+		setPixelTrans(x + offX, y + offY, image.pixels[x + y * image.getWidth()], trans);
+	    }
+	}
+    }
+
+    // Get and Sets =======================================
+
     public void setVoidColor(int voidColor){
 	this.voidColor = voidColor;
     }
@@ -273,7 +303,7 @@ public class Renderer{
     public int getTransY(){
 	return transY;
     }
-    
+
     public Font getFont(){
 	return font;
     }
@@ -310,7 +340,4 @@ public class Renderer{
 	this.translate = translate;
     }
 
-    public void drawGUIString(String string, int color, int x, int y){
-	drawString(string, color, x - transX, y - transY);
-    }
 }

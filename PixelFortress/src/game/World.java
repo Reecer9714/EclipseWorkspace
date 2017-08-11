@@ -164,8 +164,7 @@ public class World{
 			// Math.sqrt(Math.pow(width/2-x,2)+Math.pow(height/2-y,2))/(width*2);
 			// d[x][y] -= distance;
 
-			double mask = (-Math.pow((x - (width / 2)), 2.) / Math.pow(width, 2)
-				- Math.pow((y - (height / 2)), 2) / Math.pow(height, 2)) + 0.1;
+			double mask = (-Math.pow((x - (width / 2)), 2) / Math.pow(width, 2)- Math.pow((y - (height / 2)), 2) / Math.pow(height, 2)) + 0.1;
 			if(mask < 0.1) d[x][y] += mask;
 		    }
 
