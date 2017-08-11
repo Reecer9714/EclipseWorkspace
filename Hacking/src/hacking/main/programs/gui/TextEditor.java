@@ -35,7 +35,7 @@ public class TextEditor extends GUIProgram{
 	loadOption.addActionListener(new ActionListener(){
 	    @Override
 	    public void actionPerformed(ActionEvent e){
-		// TODO; add popup to select file
+		// TODO: add popup to select file
 		// load();
 	    }
 	});

@@ -11,6 +11,8 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import hacking.main.computers.Computer;
+import hacking.main.computers.Upgrades;
+import hacking.main.computers.Upgrades.Upgrade;
 import hacking.main.files.TextFile;
 import hacking.main.mail.*;
 
@@ -64,8 +66,21 @@ public class GUIGame{
 	_this = this;
 	myComputer = new Computer(this, "MyComputer", ranIP());
 	comps.put("127.0.0.1", myComputer);
-
 	connectedComp = myComputer;
+	
+	//Upgrades
+	Upgrades upgrades = new Upgrades();
+	upgrades.items.get(Upgrades.CPU).add(upgrades.new Upgrade("Stock", 50, 50));
+	upgrades.items.get(Upgrades.CPU).add(upgrades.new Upgrade("AMD", 300, 100));
+	upgrades.items.get(Upgrades.CPU).add(upgrades.new Upgrade("Intel", 700, 500));
+	
+	upgrades.items.get(Upgrades.RAM).add(upgrades.new Upgrade("Stock", 50, 128));
+	upgrades.items.get(Upgrades.RAM).add(upgrades.new Upgrade("HyperX", 300, 512));
+	upgrades.items.get(Upgrades.RAM).add(upgrades.new Upgrade("Corsair", 700, 1024));
+	
+	upgrades.items.get(Upgrades.HDD).add(upgrades.new Upgrade("Stock", 50, 50));
+	upgrades.items.get(Upgrades.HDD).add(upgrades.new Upgrade("WesternDigital", 300, 100));
+	upgrades.items.get(Upgrades.HDD).add(upgrades.new Upgrade("Seagate", 700, 500));
 
 	ips = new TextFile(this, "listedips");
 	// Lookup server//

@@ -2,11 +2,10 @@ package hacking.main.programs.gui;
 
 import java.awt.BorderLayout;
 import java.awt.event.*;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
-
-import com.sun.javafx.application.PlatformImpl;
 
 import hacking.main.GUIGame;
 import hacking.main.ReaperOS;
@@ -51,11 +50,16 @@ public class WebBrowser extends GUIProgram{
 	loadPage("http://www.google.com");// start page
     }
 
-    public void loadCustomPage(String HTMLString){
+    public void loadCustomPage(String page){
 	Platform.runLater(new Runnable(){
 	    @Override
 	    public void run(){
-		webEngine.loadContent(HTMLString);
+		
+		String html = GUIGame.class.getResource("/webpages/" + page + ".html").toString();
+		String css = GUIGame.class.getResource("/webpages/" + page + ".css").toString();
+		
+		webEngine.load(html);
+		webEngine.setUserStyleSheetLocation(css);
 	    }
 	});
     }
@@ -74,6 +78,11 @@ public class WebBrowser extends GUIProgram{
 	@Override
 	public void actionPerformed(ActionEvent e){
 	    if(e.getSource() == urlBar){
+		if(urlBar.getText().equals("store.com")){
+		    loadCustomPage("store");
+		    return;
+		}
+		
 		loadPage(urlBar.getText());
 	    }
 	}

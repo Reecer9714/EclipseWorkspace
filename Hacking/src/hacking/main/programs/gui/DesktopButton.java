@@ -19,7 +19,7 @@ public class DesktopButton extends JLabel{
     private GUIProgram program;
 
     public DesktopButton(GUIProgram p, String name, ImageIcon icon){
-	super(name + ".exe");
+	super(name);
 	this.program = p;
 
 	setHorizontalAlignment(SwingConstants.CENTER);

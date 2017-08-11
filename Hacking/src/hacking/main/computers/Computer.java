@@ -15,7 +15,8 @@ public class Computer{
     private String name;
     private String ip;
     private double cpu;// cpu speed
-    private double hdd;// drive space
+    private double ram;// ram amount
+    private double hdd;// drive amount
     private double net;// net speed
     private MailBox box;
     private Folder C;
@@ -25,12 +26,13 @@ public class Computer{
 
     public Computer(GUIGame g, String n, String s){
 	// create a better random creation
-	this(g, n, s, Math.random() + 0.5, Math.random() + 0.5, Math.random() + 0.5);
+	this(g, n, s, Math.random() + 0.5, Math.random() + 0.5, Math.random() + 0.5, Math.random() + 0.5);
     }
 
-    public Computer(GUIGame g, String n, String s, double cp, double hd, double nt){
+    public Computer(GUIGame g, String n, String s, double cp, double rm, double hd, double nt){
 	setName(n);
 	ip = s;
+	setRam(rm);
 	setCpu(cp);
 	setHdd(hd);
 	setNet(nt);
@@ -105,6 +107,14 @@ public class Computer{
     public void setCpu(double cpu){
 	this.cpu = cpu;
     }
+    
+    public double getRam(){
+	return ram;
+    }
+
+    public void setRam(double ram){
+        this.ram = ram;
+    }
 
     public double getHdd(){
 	return hdd;
@@ -123,7 +133,12 @@ public class Computer{
     }
 
     public String toString(){
-	return name + ":\n IP: " + ip + "\n CPU: " + cpu + "\n HDD: " + hdd + "\n NETWORK: " + net;
+	return name 
+		+ ":\n IP: " + ip 
+		+ "\n CPU: " + cpu 
+		+ "\n RAM: " + ram
+		+ "\n HDD: " + hdd
+		+ "\n NET: " + net;
     }
 
     public Folder getC(){
@@ -145,4 +160,5 @@ public class Computer{
     public Folder getCurrentDir(){
 	return currentDir;
     }
+
 }

@@ -88,7 +88,7 @@ public class Terminal extends GUIProgram{
 	    /*
 	     * bounce (ip) linked list run (program) new (txt)
 	     */
-	    case "open":// TODO: add to help command
+	    case "open":
 		open(command);
 	    break;
 	    case "connect":
@@ -121,11 +121,16 @@ public class Terminal extends GUIProgram{
     }
 
     public void helpMessage(){
-	messageOut("  Commands:\n" + "\texit - exits the game\n" + "\tinfo - displays computer info\n"
-		+ "\tcd (folder)- changes current directory to folder\n"
-		+ "\tdir - creates a new folder in current directory\n"
-		+ "\tls - list all folders and files in current directory\n" + "\thelp - displays commands\n"
-		+ "\tconnect (ip) - try connecting to ip\n" + "\tdisconnect - disconnect from connected computer");
+	messageOut(" Commands:\n"
+		+ "    exit - exits the game\n"
+		+ "    info - displays computer info\n"
+    		+ "    cd [folder]- changes current directory to folder\n"
+    		+ "    dir [folder]- creates a new folder in current directory\n"
+    		+ "    ls - list all folders and files in current directory\n"
+    		+ "    help - displays commands\n"
+    		+ "    open [file] - opens the given file\n"
+    		+ "    connect [ip] - try connecting to ip\n"
+    		+ "    disconnect - disconnect from connected computer");
     }
 
     public void open(String[] line){
@@ -161,7 +166,7 @@ public class Terminal extends GUIProgram{
 	messageOut("Disconnected");
     }
 
-    public void exit(){// TODO::Find a way to respond in GUI
+    public void exit(){// TODO: Find a way to respond in GUI
 	// messageOut("Are you sure? Type exit again to quit");
 	messageOut("Just hit the close button");
 	// prompted = true;

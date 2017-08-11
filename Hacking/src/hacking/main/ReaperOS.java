@@ -21,6 +21,8 @@ public class ReaperOS extends JFrame{
     private MailBrowser mailbox;
     public ImageIcon readMail;
     public ImageIcon unreadMail;
+    private MyComputer mycomputer;
+    private Store store;
     /**
      * Creates new form ReaperOS
      * icons https://www.iconfinder.com/iconsets/onebit
@@ -40,8 +42,8 @@ public class ReaperOS extends JFrame{
 	setMinimumSize(new Dimension(720, 640));
 	setPreferredSize(new Dimension(1080, 720));
 	
-	readMail = createImageIcon("/readMail.png");
-	unreadMail = createImageIcon("/unreadMail.png");
+	readMail = createImageIcon("/icons/readMail.png");
+	unreadMail = createImageIcon("/icons/unreadMail.png");
 
 	desktop = new JDesktopPane();
 	menubar = new JMenuBar();
@@ -53,11 +55,13 @@ public class ReaperOS extends JFrame{
 	menubar.add(startmenu);
 
 	// Setup Programs
-	terminal = new Terminal(this, createImageIcon("/terminal.png"), (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
-	webbrowser = new WebBrowser(this, createImageIcon("/webbrowser.png"), (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
-	filebrowser = new FileBrowser(this, createImageIcon("/filebrowser.png"), (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
-	texteditor = new TextEditor(this, createImageIcon("/texteditor.png"), (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
-	mailbox = new MailBrowser(this, createImageIcon("/mailbox.png"), (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
+	terminal = new Terminal(this, createImageIcon("/icons/terminal.png"), (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
+	webbrowser = new WebBrowser(this, createImageIcon("/icons/webbrowser.png"), (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
+	filebrowser = new FileBrowser(this, createImageIcon("/icons/filebrowser.png"), (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
+	texteditor = new TextEditor(this, createImageIcon("/icons/texteditor.png"), (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
+	mailbox = new MailBrowser(this, createImageIcon("/icons/mailbox.png"), (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
+	mycomputer = new MyComputer(this, createImageIcon("/icons/mycomputer.png"), (int)(getWidth() * 0.3), (int)(getHeight() * 0.20));
+	store = new Store(this, createImageIcon("/icons/store.png"), (int)(getWidth() * 0.5), (int)(getHeight() * 0.5));
 
 	pack();
     }
