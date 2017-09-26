@@ -47,7 +47,7 @@ public class MailBrowser extends GUIProgram{
 	splitPane.setLeftComponent(southScrollPane);
 
 	mailListModel = new DefaultListModel<Mail>();
-	mailList = new JList<Mail>(os.getGame().getMyComputer().getMail());
+	mailList = new JList<Mail>(os.getGame().getMyComputer().getOwner().getMail());
 	mailList.setModel(mailListModel);
 	mailList.setVisibleRowCount(5);
 	southScrollPane.setViewportView(mailList);

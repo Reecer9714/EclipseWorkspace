@@ -7,64 +7,42 @@ import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
 import hacking.main.ReaperOS;
-import hacking.main.programs.Program;
+import hacking.main.files.Program;
 
 public abstract class GUIProgram extends JInternalFrame{
-    protected ReaperOS os;
-    //private JButton barButton;
-    private Program exe;
-    protected JPanel panel;
-    //private boolean open;
-
-    public GUIProgram(ReaperOS os, String title, ImageIcon icon, int width, int height){
-	super(title, true, true, true, true);
-	exe = new Program(os.getGame(), this, title);
-	os.getGame().getMyComputer().getDir().getFolder("Programs").addFile(exe);
-	this.os = os;
-	Dimension d = new Dimension(width, height);
-	setPreferredSize(d);
-	setMinimumSize(d);
-	setSize(d);
-
-	setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
-	addInternalFrameListener(new InternalFrameAdapter(){
-	    public void internalFrameClosing(InternalFrameEvent e){
-		close();
-	    }
-	});
-	// Menu Button
-	/*
-	barButton = new JButton(title);
-	barButton.addMouseListener(new MouseAdapter(){
-	    @Override
-	    public void mouseClicked(MouseEvent e){
-		open = !open;
-		if(open){
-		    open();
-		    barButton.setBackground(new Color(242, 230, 170));
-		}else{
-		    close();
-		    barButton.setBackground(new Color(238, 238, 238));
-		}
-	    }
-	});
-	os.getMenubar().add(barButton);
-	*/
+	private static final long serialVersionUID = -1395930983604961532L;
+	protected ReaperOS os;
+	private Program exe;
 	
-	DesktopButton button = new DesktopButton(this, title, icon);
-	os.getDesktop().add(button);
-
-	os.getDesktop().add(this);
-    }
-
-    public void open(){
-	//open = true;
-	this.show();
-    }
-
-    public void close(){
-	//open = false;
-	this.hide();
-    }
-
+	public GUIProgram(ReaperOS os, String title, ImageIcon icon, int width, int height){
+		super(title, true, true, true, true);
+		exe = new Program(os.getGame(), this, title);
+		os.getGame().getMyComputer().getDir().getFolder("Programs").addFile(exe);
+		this.os = os;
+		Dimension d = new Dimension(width, height);
+		setPreferredSize(d);
+		setMinimumSize(d);
+		setSize(d);
+		
+		setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
+		addInternalFrameListener(new InternalFrameAdapter(){
+			public void internalFrameClosing(InternalFrameEvent e){
+				close();
+			}
+		});
+		
+		DesktopButton button = new DesktopButton(this, title, icon);
+		os.getDesktop().add(button);
+		
+		os.getDesktop().add(this);
+	}
+	
+	public void open(){
+		this.show();
+	}
+	
+	public void close(){
+		this.hide();
+	}
+	
 }

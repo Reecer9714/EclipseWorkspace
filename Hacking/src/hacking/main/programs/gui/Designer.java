@@ -1,162 +1,200 @@
 package hacking.main.programs.gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JDesktopPane;
-import javax.swing.JMenuBar;
-import javax.swing.JButton;
-import java.awt.Window.Type;
-import javax.swing.JLabel;
-import javax.swing.JFormattedTextField;
-import javax.swing.ImageIcon;
-import java.awt.Component;
-import javax.swing.Box;
-import javax.swing.JMenu;
-import javax.swing.JSlider;
-import javax.swing.SwingConstants;
-import java.awt.Dimension;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.JMenuItem;
-import javax.swing.JInternalFrame;
-import javax.swing.JTextArea;
-import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JEditorPane;
-import javafx.embed.swing.JFXPanel;
-import javax.swing.JTree;
-import javax.swing.JScrollPane;
-import java.awt.Color;
-import javax.swing.JList;
-import javax.swing.JSplitPane;
-import java.awt.GridLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import javax.swing.GroupLayout;
+import javax.swing.*;
+
+import hacking.main.ReaperOS;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JTabbedPane;
-import java.awt.SystemColor;
-import javax.swing.border.MatteBorder;
 
 public class Designer extends JFrame{
-
-    private JPanel contentPane;
-
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args){
-	EventQueue.invokeLater(new Runnable(){
-	    public void run(){
+	
+	private JPanel contentPane;
+	private JDesktopPane desktopPane;
+	private int width = 600;
+	private int height = 400;
+	private JTextField textField;
+	private JTextField textField_1;
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args){
 		try{
-		    Designer frame = new Designer();
-		    frame.setVisible(true);
+			for(UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()){
+				if("Nimbus".equals(info.getName())){
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
 		}
-		catch(Exception e){
-		    e.printStackTrace();
+		catch(Exception ex){
+			Logger.getLogger(ReaperOS.class.getName()).log(Level.SEVERE, null, ex);
 		}
-	    }
-	});
-    }
-
-    /**
-     * Create the frame.
-     */
-    public Designer(){
-	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	setBounds(100, 100, 757, 517);
-	contentPane = new JPanel();
-	contentPane.setBorder(null);
-	contentPane.setLayout(new BorderLayout(0, 0));
-	setContentPane(contentPane);
-
-	JDesktopPane desktopPane = new JDesktopPane();
-	desktopPane.setBackground(Color.LIGHT_GRAY);
-	contentPane.add(desktopPane, BorderLayout.CENTER);
-
-	JInternalFrame internalFrame = new JInternalFrame("New JInternalFrame");
-	internalFrame.setBounds(42, 28, 379, 296);
-	desktopPane.add(internalFrame);
-	internalFrame.getContentPane().setLayout(new BorderLayout(0, 0));
+		
+		EventQueue.invokeLater(new Runnable(){
+			public void run(){
+				try{
+					Designer frame = new Designer();
+					frame.setVisible(true);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 	
-	JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-	tabbedPane.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-	tabbedPane.setBackground(Color.GRAY);
-	internalFrame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
-	
-	JList list_1 = new JList();
-	tabbedPane.addTab("CPUs", null, list_1, null);
-	
-	JList list_2 = new JList();
-	tabbedPane.addTab("Ram", null, list_2, null);
-	
-	JList list_3 = new JList();
-	tabbedPane.addTab("HDDs", null, list_3, null);
-	
-	JList list = new JList();
-	internalFrame.getContentPane().add(list, BorderLayout.EAST);
-	
-	JPanel panel = new JPanel();
-	panel.setBorder(new EmptyBorder(5, 5, 0, 10));
-	panel.setBackground(Color.GRAY);
-	internalFrame.getContentPane().add(panel, BorderLayout.SOUTH);
-	panel.setLayout(new BorderLayout(0, 0));
-	
-	JButton btnNewButton_1 = new JButton("BUY");
-	panel.add(btnNewButton_1, BorderLayout.CENTER);
-	btnNewButton_1.setForeground(new Color(0, 128, 0));
-	btnNewButton_1.setFont(new Font("Segoe UI Black", Font.PLAIN, 12));
-	btnNewButton_1.setBackground(Color.GRAY);
-	
-	JLabel lblNewLabel_1 = new JLabel("$500");
-	lblNewLabel_1.setFont(new Font("Segoe UI", Font.BOLD, 12));
-	lblNewLabel_1.setForeground(new Color(0, 128, 0));
-	panel.add(lblNewLabel_1, BorderLayout.EAST);
-	
-	JPanel panel_1 = new JPanel();
-	panel_1.setBackground(new Color(128, 128, 128));
-	internalFrame.getContentPane().add(panel_1, BorderLayout.NORTH);
-	
-	JLabel lblOldegg = new JLabel("OldEgg");
-	panel_1.add(lblOldegg);
-	lblOldegg.setBackground(SystemColor.textInactiveText);
-	lblOldegg.setForeground(new Color(255, 140, 0));
-	lblOldegg.setFont(new Font("Terminator Two", Font.PLAIN, 18));
-	lblOldegg.setHorizontalAlignment(SwingConstants.CENTER);
-	internalFrame.setVisible(true);
+	/**
+	 * Create the frame.
+	 */
+	public Designer(){
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 757, 517);
+		contentPane = new JPanel();
+		contentPane.setBorder(null);
+		contentPane.setLayout(new BorderLayout(0, 0));
+		setContentPane(contentPane);
+		
+		desktopPane = new JDesktopPane();
+		desktopPane.setBackground(Color.LIGHT_GRAY);
+		contentPane.add(desktopPane, BorderLayout.CENTER);
+		
+		SetupInternalFrame();
+		
+		JMenuBar menuBar = new JMenuBar();
+		contentPane.add(menuBar, BorderLayout.NORTH);
+		
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon(Designer.class.getResource("/icons/Reaper.png")));
+		menuBar.add(label);
+		
+		Component horizontalStrut = Box.createHorizontalStrut(5);
+		menuBar.add(horizontalStrut);
+		
+		JMenu mnNewMenu = new JMenu("Start");
+		mnNewMenu.setFont(new Font("Data Control", Font.BOLD, 14));
+		menuBar.add(mnNewMenu);
+		
+		JMenuItem mntmShutdown = new JMenuItem("ShutDown");
+		mnNewMenu.add(mntmShutdown);
+		
+		Component horizontalGlue = Box.createHorizontalGlue();
+		menuBar.add(horizontalGlue);
+		
+		JMenu mnNewMenu_1 = new JMenu("");
+		mnNewMenu_1.setHorizontalAlignment(SwingConstants.LEFT);
+		mnNewMenu_1.setIcon(new ImageIcon(Designer.class.getResource("/icons/wifiicon.png")));
+		menuBar.add(mnNewMenu_1);
+		
+		JPanel panel = new JPanel();
+		mnNewMenu_1.add(panel);
+		panel.setLayout(new BorderLayout(0, 0));
+		
+		JList list = new JList();
+		list.setModel(new AbstractListModel() {
+			String[] values = new String[] {"OpenWifi", "NeighborsWifi", "Virus Infected", "NSA Van"};
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+		panel.add(list, BorderLayout.NORTH);
+		
+		JButton btnDisconnect = new JButton("Disconnect");
+		panel.add(btnDisconnect, BorderLayout.SOUTH);
+		
+		JMenu mnSound = new JMenu("");
+		mnSound.setIcon(new ImageIcon(
+				Designer.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaMuteDisabled.png")));
+		mnSound.setHorizontalAlignment(SwingConstants.LEFT);
+		menuBar.add(mnSound);
+		
+		JSlider volumeSlider = new JSlider();
+		volumeSlider.setPreferredSize(new Dimension(20, 200));
+		volumeSlider.setOrientation(SwingConstants.VERTICAL);
+		mnSound.add(volumeSlider);
+	}
 
-	JMenuBar menuBar = new JMenuBar();
-	contentPane.add(menuBar, BorderLayout.SOUTH);
+	public void SetupInternalFrame(){
+		JInternalFrame internalFrame = new JInternalFrame("New JInternalFrame", true, true, true, true);
+		internalFrame.setBounds(42, 40, 379, 178);
+		desktopPane.add(internalFrame);
+		SetupProgramGUI(internalFrame);
+		//BEGIN
+		
+		internalFrame.getContentPane().setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel = new JPanel();
+		internalFrame.getContentPane().add(panel, BorderLayout.NORTH);
+		
+		JLabel lblNewLabel = new JLabel("IP");
+		
+		textField = new JTextField();
+		lblNewLabel.setLabelFor(textField);
+		textField.setColumns(10);
+		
+		Component horizontalGlue = Box.createHorizontalGlue();
+		
+		JButton btnNewButton_1 = new JButton("Crack");
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		
+		Component horizontalStrut = Box.createHorizontalStrut(20);
+		panel.add(horizontalStrut);
+		panel.add(lblNewLabel);
+		panel.add(textField);
+		panel.add(horizontalGlue);
+		panel.add(btnNewButton_1);
+		
+		JPanel panel_1 = new JPanel();
+		internalFrame.getContentPane().add(panel_1, BorderLayout.SOUTH);
+		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.X_AXIS));
+		
+		Component horizontalStrut_1 = Box.createHorizontalStrut(20);
+		panel_1.add(horizontalStrut_1);
+		
+		JLabel lblNewLabel_1 = new JLabel("Password");
+		panel_1.add(lblNewLabel_1);
+		
+		textField_1 = new JTextField();
+		textField_1.setEditable(false);
+		panel_1.add(textField_1);
+		textField_1.setColumns(10);
+		
+		JButton btnLogin = new JButton("Login");
+		panel_1.add(btnLogin);
+		
+		JPanel panel1 = new JPanel();
+		internalFrame.getContentPane().add(panel1, BorderLayout.CENTER);
+		panel1.setLayout(new BorderLayout(0, 0));
+		
+		JProgressBar progressBar = new JProgressBar();
+		panel1.add(progressBar, BorderLayout.CENTER);
+		
+		JPanel panel_11 = new JPanel();
+		panel1.add(panel_11, BorderLayout.NORTH);
+		panel_11.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		JLabel lblStatus = new JLabel("Status:");
+		lblStatus.setFont(new Font("SansSerif", Font.BOLD, 12));
+		panel_11.add(lblStatus);
+		
+		Component horizontalGlue_1 = Box.createHorizontalGlue();
+		panel_11.add(horizontalGlue_1);
+		
+		JLabel lblCracking = new JLabel("Cracking...");
+		panel_11.add(lblCracking);
+		
+		//END
+		internalFrame.show();
+	}
 
-	JMenu mnNewMenu = new JMenu("Start");
-	menuBar.add(mnNewMenu);
-
-	JButton btnNewButton = new JButton("");
-	btnNewButton.setIcon(new ImageIcon(Designer.class.getResource("/javax/swing/plaf/metal/icons/ocean/menu.gif")));
-	btnNewButton.setToolTipText("Terminal");
-	menuBar.add(btnNewButton);
-
-	Component horizontalGlue = Box.createHorizontalGlue();
-	menuBar.add(horizontalGlue);
-
-	JMenu mnSound = new JMenu("");
-	mnSound.setIcon(new ImageIcon(
-		Designer.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaMuteDisabled.png")));
-	mnSound.setHorizontalAlignment(SwingConstants.LEFT);
-	menuBar.add(mnSound);
-
-	JLabel lblNewLabel = new JLabel("Sound");
-	mnSound.add(lblNewLabel);
-
-	JSlider volumeSlider = new JSlider();
-	volumeSlider.setPreferredSize(new Dimension(20, 200));
-	volumeSlider.setOrientation(SwingConstants.VERTICAL);
-	mnSound.add(volumeSlider);
-    }
+	private void SetupProgramGUI(JInternalFrame internalFrame){
+		
+	}
 }
