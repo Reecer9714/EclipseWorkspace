@@ -9,10 +9,10 @@ import hacking.main.programs.gui.Terminal;
 
 public class Computer{
 	private String ip;
-	private Folder C;
-	private Folder home;
-	private TextFile log;
-	private Folder currentDir;
+	private Folder C;//
+	private Folder home;//
+	private TextFile log;//
+	private Folder currentDir;//
 	private String password;
 	private String possibleChar = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	private boolean access;
