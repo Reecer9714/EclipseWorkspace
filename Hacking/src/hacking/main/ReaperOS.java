@@ -28,7 +28,7 @@ public class ReaperOS extends JFrame{
 	private MyComputer mycomputer;//Going to be removed
 	private Store store;//Same
 	private MailBrowser mailbox;
-	private Cracker cracker;
+	private CrackerGUI cracker;
 	
 	public ImageIcon readMail;
 	public ImageIcon unreadMail;
@@ -143,7 +143,7 @@ public class ReaperOS extends JFrame{
 		mycomputer = new MyComputer(this, createImageIcon("/icons/mycomputer.png"), (int)(width * 0.3),
 				(int)(height * 0.25));
 		store = new Store(this, createImageIcon("/icons/store.png"), (int)(width * 0.5), (int)(height * 0.5));
-		cracker = new Cracker(this, createImageIcon("/icons/cracker.png"), (int)(width * 0.5), (int)(height * 0.25));
+		cracker = new CrackerGUI(this, createImageIcon("/icons/cracker.png"), (int)(width * 0.5), (int)(height * 0.25));
 	}
 	
 	private void loadBackgrounds(){
@@ -201,7 +201,7 @@ public class ReaperOS extends JFrame{
 		return mailbox;
 	}
 
-	public Cracker getCracker(){
+	public CrackerGUI getCracker(){
 		return cracker;
 	}
 	

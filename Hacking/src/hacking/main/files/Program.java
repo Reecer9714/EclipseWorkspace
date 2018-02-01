@@ -3,22 +3,29 @@ package hacking.main.files;
 import hacking.main.GUIGame;
 import hacking.main.programs.gui.GUIProgram;
 
-public class Program extends File{
+public abstract class Program extends File{
 	private double version;
-	private GUIProgram exe;
+	protected GUIProgram guiProgram;
 	
-	public Program(GUIGame g, GUIProgram exe, String n){
-		super(g, n);
-		this.version = 1.0;
-		this.exe = exe;
-		this.ext = ".exe";
+	//TODO: Figure out if these constructors are even necessary
+	public Program(GUIGame g, String n){
+		this(g, n, null, g.getMyComputer().getMainDrive().getDir().getFolder("Programs"));
+	}
+	
+	public Program(GUIGame g, String n, GUIProgram p){
+		this(g, n, p, g.getMyComputer().getMainDrive().getDir().getFolder("Programs"));
 	}
 	
 	public Program(GUIGame g, String n, Folder f){
+		this(g, n, null, f);
+	}
+	
+	public Program(GUIGame g, String n, GUIProgram p, Folder f){
 		super(g, n, f);
 		this.version = 1.0;
-		this.exe = null;
 		this.ext = ".exe";
+		this.guiProgram = p;
+		f.addFile(this);
 	}
 	
 	public double getVersion(){
@@ -33,17 +40,21 @@ public class Program extends File{
 		this.version = v;
 	}
 	
-	public void exit(){
-		exe.close();
-	}
-	
+	//Open GUI
 	@Override
 	public void open(){
-		exe.open();
+		if(guiProgram != null){
+			//open the program
+			guiProgram.run();
+		}else{
+			//open terminal
+			//tell terminal this program is running and hand over control
+			//run program
+			run();
+		}
 	}
-
-	public GUIProgram getExe(){
-		return exe;
-	}
+	
+	//Used for taking over terminal control
+	public abstract void run();
 	
 }
