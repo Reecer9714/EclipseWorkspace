@@ -28,7 +28,7 @@ public class WebBrowser extends GUIProgram{
 	private WebView browser;
 	private WebEngine webEngine;
 	private WebPage currentCustom;
-	private HashMap<String,WebPage> pages;
+	private HashMap<String, WebPage> pages;
 	private final String Error404 = "<p> </p><h1 style=\"text-align: center;\">ERROR 404</h1><p> </p>"
 			+ "<h2 style=\"text-align: center;\">Page Not Found</h2><p style=\"text-align: center;\">"
 			+ "Sorry, but the page you were trying to view does not exist.</p>";
@@ -42,9 +42,9 @@ public class WebBrowser extends GUIProgram{
 		urlBar.addActionListener(new UrlBarHandler());
 		getFrame().getContentPane().add(urlBar, BorderLayout.NORTH);
 		
-		pages = new HashMap<String,WebPage>();
-		pages.put("https://www.oldegg.com", new StorePage());
-		pages.put("https://www.snooper.com", new SearchPage());
+		pages = new HashMap<String, WebPage>();
+		pages.put("http://www.oldegg.com", new StorePage());
+		pages.put("http://www.snooper.com", new SearchPage());
 		
 		JFXPanel panel = new JFXPanel();
 		createScene(panel, os);
@@ -75,18 +75,19 @@ public class WebBrowser extends GUIProgram{
 				currentCustom = pages.get(url);
 				String html = currentCustom.getHtml();
 				String css = currentCustom.getCss();
-                
+				
 				if(html != null){
 					webEngine.load(html);
+					if(css != null){
+						webEngine.setUserStyleSheetLocation(css);
+					}
 				}else{
 					webEngine.loadContent(Error404);
 				}
-				if(css != null){
-					webEngine.setUserStyleSheetLocation(css);
-				}
 				
-//				JSObject win = (JSObject) webEngine.executeScript("window");
-//              win.setMember("app", new JavaInterface());
+				
+				// JSObject win = (JSObject) webEngine.executeScript("window");
+				// win.setMember("app", new JavaInterface());
 			}
 		});
 	}
@@ -117,8 +118,8 @@ public class WebBrowser extends GUIProgram{
 				if(!parsed.contains("www.")){
 					parsed = "www." + parsed;
 				}
-				if(!parsed.contains("https://")){
-					parsed = "https://" + parsed;
+				if(!parsed.contains("http://")){
+					parsed = "http://" + parsed;
 				}
 				
 				loadPage(parsed);
@@ -145,21 +146,20 @@ public class WebBrowser extends GUIProgram{
 				browser.setPrefSize(panel.getWidth(), panel.getHeight());
 				webEngine = browser.getEngine();
 				webEngine.load("http://www.google.com");// start page
-				webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
-		            @Override
-		            public void changed(ObservableValue<? extends State> ov, State t, State t1) {
-		                if (t1 == State.FAILED) {
-		                	System.out.println("Failed to load showing 404");
-		                	webEngine.loadContent(Error404);
-		                }
-		                if(t1 == State.SUCCEEDED && currentCustom != null){
-		                	JSObject win = (JSObject) webEngine.executeScript("window");
-		                	WebInterface inter = currentCustom.getInterface(webEngine);
-		                	if(inter != null) win.setMember("app", currentCustom.getInterface(webEngine));
-		                }
-		            }
-		        });
-				
+				webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<State>(){
+					@Override
+					public void changed(ObservableValue<? extends State> ov, State t, State t1){
+						if(t1 == State.FAILED){
+							System.out.println("Failed to load showing 404");
+							webEngine.loadContent(Error404);
+						}
+						if(t1 == State.SUCCEEDED && currentCustom != null){
+							JSObject win = (JSObject)webEngine.executeScript("window");
+							WebInterface inter = currentCustom.getInterface(webEngine);
+							if(inter != null) win.setMember("app", currentCustom.getInterface(webEngine));
+						}
+					}
+				});
 				
 				ObservableList<Node> children = root.getChildren();
 				children.add(browser);

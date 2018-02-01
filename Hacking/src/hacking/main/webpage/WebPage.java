@@ -14,7 +14,7 @@ public abstract class WebPage{
 	private String desc;
 	
 	public WebPage(String url, String filename, String title, String desc){
-		this.url = "https://www." + url;
+		this.url = "http://www." + url;
 		this.title = title;
 		this.desc = desc;
 		URL htmlFile = GUIGame.class.getResource("/webpages/" + filename + ".html");
