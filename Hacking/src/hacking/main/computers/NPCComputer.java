@@ -1,6 +1,7 @@
 package hacking.main.computers;
 
 import hacking.main.GUIGame;
+import hacking.main.internet.IP;
 
 public class NPCComputer extends Computer{
 	private NPC owner;
@@ -9,11 +10,11 @@ public class NPCComputer extends Computer{
 	private double hdd;// drive amount
 	private double net;// net speed
 	
-	public NPCComputer(GUIGame g, NPC n, String ip){
+	public NPCComputer(GUIGame g, NPC n, IP ip){
 		this(g,n,ip,Math.random()*10,Math.random()*10,Math.random()*10,Math.random()*10);
 	}
 
-	public NPCComputer(GUIGame g, NPC n, String ip, double cp, double rm, double hd, double nt){
+	public NPCComputer(GUIGame g, NPC n, IP ip, double cp, double rm, double hd, double nt){
 		super(g, ip);
 		this.owner = n;
 		setRam(rm);

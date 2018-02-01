@@ -26,7 +26,7 @@ public class Folder extends File{
 	
 	@Override
 	public void open(){
-		game.getMyComputer().changeDir(this);
+		game.getMyComputer().getMainDrive().changeDir(this);
 	}
 	
 	public ArrayList<File> getChildren(){

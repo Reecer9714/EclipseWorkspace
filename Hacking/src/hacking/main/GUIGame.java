@@ -13,6 +13,7 @@ import javax.swing.UIManager;
 
 import hacking.main.computers.*;
 import hacking.main.files.TextFile;
+import hacking.main.internet.IP;
 import hacking.main.mail.*;
 
 public class GUIGame{
@@ -22,10 +23,10 @@ public class GUIGame{
 	
 	private NPCComputer myComputer;
 	private Computer connectedComp;
+	private Internet cloud;
 	
 	private TextFile ips;
 	public final boolean GUI = true;
-	private HashMap<String, Computer> comps = new HashMap<String, Computer>();
 	private NPC player;
 	
 	public static void main(String args[]){
@@ -57,10 +58,11 @@ public class GUIGame{
 	
 	public GUIGame(){
 		_this = this;
+		cloud = new Internet();
 		player = new NPC(this, "anonymous");
-		myComputer = new NPCComputer(this, player, ranIP());
+		myComputer = new NPCComputer(this, player, IP.generatePublicIP());
 		myComputer.setAccess(true);
-		comps.put("127.0.0.1", myComputer);
+		cloud.connectComp(myComputer);
 		connectedComp = myComputer;
 		
 		// Upgrades
@@ -79,18 +81,18 @@ public class GUIGame{
 		
 		ips = new TextFile(this, "listedips");
 		// Lookup server//
-		Computer lookup = new Computer(this, "1.2.3.4");
-		comps.put("1.2.3.4", lookup);
-		lookup.getHome().getFolder("Documents").addFile(ips);
+		Computer lookup = new Computer(this, new IP("1.2.3.4"));
+		cloud.connectComp(lookup);
+		lookup.getMainDrive().getHome().getFolder("Documents").addFile(ips);
 		
 		// add 10 computers with unique ip's
 		for(int i = 0; i < 10; i++){
-			NPCComputer c = new NPCComputer(this, player, ranIP());
-			while(comps.containsKey(c.getIp())){
-				c.setIp(ranIP());
+			NPCComputer c = new NPCComputer(this, player, IP.generatePublicIP());
+			while(cloud.containsIP(c.getPublicIp())){
+				c.setPublicIp(IP.generatePublicIP());
 			}
-			comps.put(c.getIp(), c);
-			ips.addLine(c.getIp());
+			cloud.connectComp(c);
+			ips.addLine(c.getPublicIp().ip);
 		}
 		
 	}
@@ -130,7 +132,7 @@ public class GUIGame{
 		this.connectedComp = connectedComp;
 	}
 	
-	public Random getRan(){
+	public static Random getRan(){
 		return ran;
 	}
 	
@@ -138,8 +140,8 @@ public class GUIGame{
 		return myComputer;
 	}
 	
-	public HashMap<String, Computer> getComps(){
-		return comps;
+	public Internet getInternet(){
+		return cloud;
 	}
 	
 	public ReaperOS getOS(){
