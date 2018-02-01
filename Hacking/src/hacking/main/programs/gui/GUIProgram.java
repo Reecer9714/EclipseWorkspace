@@ -9,23 +9,23 @@ import javax.swing.event.InternalFrameEvent;
 import hacking.main.ReaperOS;
 import hacking.main.files.Program;
 
-public abstract class GUIProgram extends JInternalFrame{
+public abstract class GUIProgram extends Program{
 	private static final long serialVersionUID = -1395930983604961532L;
 	protected ReaperOS os;
-	private Program exe;
+	private JInternalFrame pane;
 	
 	public GUIProgram(ReaperOS os, String title, ImageIcon icon, int width, int height){
-		super(title, true, true, true, true);
-		exe = new Program(os.getGame(), this, title);
-		os.getGame().getMyComputer().getDir().getFolder("Programs").addFile(exe);
+		super(os.getGame(), title);
+		pane = new JInternalFrame(title, true, true, true, true);
+		os.getGame().getMyComputer().getMainDrive().getDir().getFolder("Programs").addFile(this);
 		this.os = os;
 		Dimension d = new Dimension(width, height);
-		setPreferredSize(d);
-		setMinimumSize(d);
-		setSize(d);
+		pane.setPreferredSize(d);
+		pane.setMinimumSize(d);
+		pane.setSize(d);
 		
-		setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
-		addInternalFrameListener(new InternalFrameAdapter(){
+		pane.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
+		pane.addInternalFrameListener(new InternalFrameAdapter(){
 			public void internalFrameClosing(InternalFrameEvent e){
 				close();
 			}
@@ -34,15 +34,22 @@ public abstract class GUIProgram extends JInternalFrame{
 		DesktopButton button = new DesktopButton(this, title, icon);
 		os.getDesktop().add(button);
 		
-		os.getDesktop().add(this);
+		os.getDesktop().add(pane);
+	}
+	
+	public JInternalFrame getFrame(){
+		return pane;
 	}
 	
 	public void open(){
-		this.show();
+		pane.show();
 	}
 	
 	public void close(){
-		this.hide();
+		pane.hide();
 	}
 	
+	public void run(){
+		open();
+	}
 }

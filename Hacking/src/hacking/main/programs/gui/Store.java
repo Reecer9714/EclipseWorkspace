@@ -20,7 +20,7 @@ public class Store extends GUIProgram{
 	
 	JPanel northPanel = new JPanel();
 	northPanel.setBackground(new Color(128, 128, 128));
-	getContentPane().add(northPanel, BorderLayout.NORTH);
+	getFrame().getContentPane().add(northPanel, BorderLayout.NORTH);
 	
 	JLabel storeName = new JLabel("OldEgg");
 	storeName.setBackground(SystemColor.textInactiveText);
@@ -32,7 +32,7 @@ public class Store extends GUIProgram{
 	JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 	tabbedPane.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 	tabbedPane.setBackground(Color.GRAY);
-	getContentPane().add(tabbedPane, BorderLayout.CENTER);
+	getFrame().getContentPane().add(tabbedPane, BorderLayout.CENTER);
 	
 	JList<Upgrade> cpuTab = new JList<Upgrade>(Upgrades.items.get(Upgrades.CPU));
 	tabbedPane.addTab("CPUs", null, cpuTab, null);
@@ -47,7 +47,7 @@ public class Store extends GUIProgram{
 	southPanel.setBorder(new EmptyBorder(5, 5, 0, 10));
 	southPanel.setBackground(Color.GRAY);
 	southPanel.setLayout(new BorderLayout(0, 0));
-	getContentPane().add(southPanel, BorderLayout.SOUTH);
+	getFrame().getContentPane().add(southPanel, BorderLayout.SOUTH);
 	
 	JButton buyButton = new JButton("BUY");
 	buyButton.setForeground(new Color(0, 128, 0));

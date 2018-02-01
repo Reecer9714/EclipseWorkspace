@@ -17,14 +17,14 @@ public class MyComputer extends GUIProgram{
 	
 	public MyComputer(ReaperOS os, ImageIcon icon, int width, int height){
 		super(os, "MyComputer", icon, width, height);
-		this.setMaximumSize(new Dimension(width, height));
+		getFrame().setMaximumSize(new Dimension(width, height));
 		JLabel lblComputername = new JLabel(os.getGame().getMyComputer().getOwner().getName() + ":");
 		lblCpu = new JLabel("CPU: " + os.getGame().getMyComputer().getCpu());
 		lblRam = new JLabel("RAM: " + os.getGame().getMyComputer().getRam());
 		lblHdd = new JLabel("HDD: " + os.getGame().getMyComputer().getHdd());
 		lblPW = new JLabel("PW: " + os.getGame().getMyComputer().getPassword());
 		
-		GroupLayout groupLayout = new GroupLayout(getContentPane());
+		GroupLayout groupLayout = new GroupLayout(getFrame().getContentPane());
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
 				.createSequentialGroup()
 				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
@@ -40,7 +40,7 @@ public class MyComputer extends GUIProgram{
 						.addPreferredGap(ComponentPlacement.RELATED).addComponent(lblHdd)
 						.addPreferredGap(ComponentPlacement.RELATED).addComponent(lblPW)
 						.addContainerGap(202, Short.MAX_VALUE)));
-		getContentPane().setLayout(groupLayout);
+		getFrame().getContentPane().setLayout(groupLayout);
 	}
 	
 	@Override

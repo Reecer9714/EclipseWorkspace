@@ -17,7 +17,7 @@ public class TextEditor extends GUIProgram{
     public TextEditor(ReaperOS os, ImageIcon icon, int width, int height){
 	super(os, "TextEditor", icon, width, height);
 	JMenuBar menuBar_1 = new JMenuBar();
-	setJMenuBar(menuBar_1);
+	getFrame().setJMenuBar(menuBar_1);
 
 	JMenu mnFile = new JMenu("File");
 	menuBar_1.add(mnFile);
@@ -42,7 +42,7 @@ public class TextEditor extends GUIProgram{
 	mnFile.add(loadOption);
 
 	JScrollPane scrollPane = new JScrollPane();
-	getContentPane().add(scrollPane, BorderLayout.CENTER);
+	getFrame().getContentPane().add(scrollPane, BorderLayout.CENTER);
 
 	textArea = new JTextArea();
 	scrollPane.setViewportView(textArea);

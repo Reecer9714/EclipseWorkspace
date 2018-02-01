@@ -10,6 +10,7 @@ import hacking.main.GUIGame;
 import hacking.main.ReaperOS;
 import hacking.main.files.File;
 import hacking.main.files.Program;
+import hacking.main.internet.IP;
 
 public class Terminal extends GUIProgram{
 	private GUIGame game;
@@ -20,70 +21,63 @@ public class Terminal extends GUIProgram{
 	private static LinkedList<String> lastCommands = new LinkedList<String>();
 	private Set<AWTKeyStroke> set = new HashSet<AWTKeyStroke>();
 	private static int commandIndex = 0;
+	private int minCursor;
 	
 	public Terminal(ReaperOS os, ImageIcon icon, int width, int height){
 		super(os, "Terminal", icon, width, height);
 		this.game = os.getGame();
 		JScrollPane scrollPane = new JScrollPane();
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
+		getFrame().getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
 		cmdArea = new JTextArea();
 		cmdArea.setText("ReaperOS Terminal\nVersion 6.3.2017\n\n");
 		showPrompt();
+		updateMinCursor();
 		cmdArea.setMinimumSize(new Dimension(width, (int)(height * 0.9)));
 		scrollPane.setViewportView(cmdArea);
 //		cmdArea.setFont(new Font("Fixedsys", Font.PLAIN, 12));
 		cmdArea.setFont(new Font("Lucida Console", Font.PLAIN, 14));
 		cmdArea.setBackground(Color.BLACK);
-		cmdArea.setForeground(Color.WHITE);
+		cmdArea.setForeground(Color.LIGHT_GRAY);
+		cmdArea.getInputMap().put(KeyStroke.getKeyStroke("ENTER"),"none");
 		cmdArea.addKeyListener(new KeyAdapter(){
-			private final String BACK_SPACE_KEY_BINDING = getKeyBinding(cmdArea.getInputMap(), "BACK_SPACE");
-			private boolean isKeysDisabled;
-			private int minCursorPosition = cmdArea.getText().length();
+			private final String BACK_SPACE_KEY_BINDING = getKeyBinding(
+					cmdArea.getInputMap(), "BACK_SPACE");
 			
-			public void keyPressed(KeyEvent evt){
-				int keyCode = evt.getKeyCode();
-				if(keyCode == KeyEvent.VK_BACK_SPACE){
-					int cursorPosition = cmdArea.getCaretPosition();
-					if(cursorPosition == minCursorPosition && !isKeysDisabled){
-						disableBackspaceKey();
-					}else if(cursorPosition > minCursorPosition && isKeysDisabled){
-						enableBackspaceKey();
-					}
-				}else if(keyCode == KeyEvent.VK_ENTER){
-					disable();
-					String command = getCommand();
-					handleInput(command);
-					//messageOut("");
-					enable();
-				}
-			}
+			public void keyPressed(KeyEvent evt) {
+	            int keyCode = evt.getKeyCode();
+	            if (keyCode == KeyEvent.VK_BACK_SPACE) {
+	            	int cursorPosition = cmdArea.getCaretPosition();
+	                if (cursorPosition <= minCursor) {
+	                    disableBackspaceKey();
+	                } else {
+	                    enableBackspaceKey();
+	                }
+	            }else if(keyCode == KeyEvent.VK_ENTER){
+	            	disable();
+	            	String command = extractCommand();
+	            	System.out.println("Command: " + command);
+	            	handleInput(command);
+	            	messageOut("");
+	            	showPrompt();
+	            	updateMinCursor();
+	            	enable();
+	            }
+	        }
 			
-			public void keyReleased(KeyEvent evt){
-				int keyCode = evt.getKeyCode();
-				if(keyCode == KeyEvent.VK_ENTER){
-					String terminalText = cmdArea.getText();
-					if(terminalText.endsWith("\n")){
-						cmdArea.setText(terminalText.substring(0, terminalText.length() - 1));
-					}
-					cmdArea.setCaretPosition(cmdArea.getText().length());
-					minCursorPosition = cmdArea.getText().length();
-				}
-			}
+			private String getKeyBinding(InputMap inputMap, String name) {
+	            return (String) inputMap.get(KeyStroke.getKeyStroke(name));
+	        }
 			
-			private String getKeyBinding(InputMap inputMap, String name){
-				return (String)inputMap.get(KeyStroke.getKeyStroke(name));
-			}
-			
-			private void disableBackspaceKey(){
-				isKeysDisabled = true;
-				cmdArea.getInputMap().put(KeyStroke.getKeyStroke("BACK_SPACE"), "none");
-			}
-			
-			private void enableBackspaceKey(){
-				isKeysDisabled = false;
-				cmdArea.getInputMap().put(KeyStroke.getKeyStroke("BACK_SPACE"), BACK_SPACE_KEY_BINDING);
-			}
+			private void disableBackspaceKey() {
+				cmdArea.getInputMap().put(KeyStroke.getKeyStroke("BACK_SPACE"),
+	                    "none");
+	        }
+
+	        private void enableBackspaceKey() {
+	        	cmdArea.getInputMap().put(KeyStroke.getKeyStroke("BACK_SPACE"),
+	            		BACK_SPACE_KEY_BINDING);
+	        }
 		});
 		
 		String[] keystrokeNames = { "UP", "DOWN", "LEFT", "RIGHT", "HOME" };
@@ -108,6 +102,7 @@ public class Terminal extends GUIProgram{
 		enable();
 		cmdArea.setText("ReaperOS Terminal\nVersion 6.3.2017\n\n");
 		showPrompt();
+		updateMinCursor();
 	}
 	
 	@Override
@@ -126,24 +121,29 @@ public class Terminal extends GUIProgram{
 		cmdArea.setEditable(false);
 	}
 	
-	private String getCommand(){
+	private void updateMinCursor(){
+		this.minCursor = cmdArea.getCaretPosition();
+	}
+	
+	private String extractCommand(){
 		String terminalText = cmdArea.getText();
-		if(terminalText.endsWith("\n")) terminalText = terminalText.substring(0, terminalText.length() - 1);
-		int lastPromptIndex = terminalText.lastIndexOf('>') + 1;
-		if(lastPromptIndex < 0 || lastPromptIndex >= terminalText.length())
-			return "";
-		else return terminalText.substring(lastPromptIndex);
+		int index = terminalText.lastIndexOf(getPrompt())+getPrompt().length();
+		if (index < 0 || index >= terminalText.length())
+            return "";
+        else
+            return terminalText.substring(index);
 	}
 	
 	public String getPrompt(){
 		String s;
-		if(game.getConnectedComp().getIp().equals(game.getMyComputer().getIp())){
-			s = (game.getMyComputer().getDir().getPath() + ">");
+		String path = game.getMyComputer().getMainDrive().getDir().getPath();
+		if(game.getConnectedComp().getPublicIp().equals(game.getMyComputer().getPublicIp())){
+			s = (path + ">");
 		}else{
 			if(game.getConnectedComp().isAccess()){
-				s = ("[" + game.getConnectedComp().getIp() + "]:" + game.getConnectedComp().getDir().getPath() + ">");
+				s = ("[" + game.getConnectedComp().getPublicIp() + "]:" + path + ">");
 			}else{
-				s = ("#[" + game.getConnectedComp().getIp() + "]#:" + game.getConnectedComp().getDir().getPath() + ">");
+				s = ("#[" + game.getConnectedComp().getPublicIp() + "]#:" + path + ">");
 			}
 		}
 		return s;
@@ -153,16 +153,20 @@ public class Terminal extends GUIProgram{
 		cmdArea.append(getPrompt());
 	}
 	
+	public void clearScreen(){
+		cmdArea.setText("");
+		updateMinCursor();
+	}
+	
 	public void handleInput(String s){
 		addLastCommand(s);
 		String[] command = s.split(" ");
 		command[0] = command[0].toLowerCase();
 		
 		// if runningProgram send input to it
+		if(command[0].equals("")) return;
 		messageOut("");
 		switch(command[0]){
-			case "":
-				break;
 			case "exit":
 				this.close();
 				break;
@@ -171,10 +175,10 @@ public class Terminal extends GUIProgram{
 				break;
 			case "mkdir":
 				//TODO: change just like changeDir
-				game.getConnectedComp().getDir().addFolder(command);
+				game.getConnectedComp().getMainDrive().getDir().addFolder(command);
 				break;
 			case "ls":
-				messageOut(game.getConnectedComp().getDir().getContents());
+				messageOut(game.getConnectedComp().getMainDrive().getDir().getContents());
 				break;
 			/*
 			 * bounce (ip) linked list run (program) new (txt)
@@ -199,10 +203,13 @@ public class Terminal extends GUIProgram{
 			case "login":
 				login(command);
 				break;
+			case "cls":
+			case "clear":
+				clearScreen();
+				break;
 			default:
 				messageOut("  Command not recognized use [help] for a list of commands");
 		}
-		showPrompt();
 	}
 	
 	public boolean accessCheck(){
@@ -230,8 +237,8 @@ public class Terminal extends GUIProgram{
 	public void open(String[] line){
 		if(!accessCheck()) return;
 		if(line.length >= 2){
-			if(game.getConnectedComp().getDir().hasFile(line[1])){
-				game.getConnectedComp().getDir().getFile(line[1]).open();
+			if(game.getConnectedComp().getMainDrive().getDir().hasFile(line[1])){
+				game.getConnectedComp().getMainDrive().getDir().getFile(line[1]).open();
 			}else{
 				messageOut("   Could not find file " + line[1]);
 			}
@@ -242,10 +249,10 @@ public class Terminal extends GUIProgram{
 	
 	public void run(String[] line){
 		if(line.length >= 2){
-			if(game.getConnectedComp().getDir().hasFile(line[1])){
-				File f = game.getConnectedComp().getDir().getFile(line[1]);
-				if(f instanceof Program && ((Program)f).getExe() != null){
-					
+			if(game.getConnectedComp().getMainDrive().getDir().hasFile(line[1])){
+				File f = game.getConnectedComp().getMainDrive().getDir().getFile(line[1]);
+				if(f instanceof Program){
+					((Program)f).run();
 				}else{
 					messageOut("this file is not runnable");
 				}
@@ -258,11 +265,11 @@ public class Terminal extends GUIProgram{
 		}
 	}
 	
-	public boolean connect(String ip){
-		if(game.getComps().containsKey(ip)){
-			game.setConnectedComp(game.getComps().get(ip));
+	public boolean connect(IP ip){
+		if(game.getInternet().containsIP(ip)){
+			game.setConnectedComp(game.getInternet().getComputer(ip));
 			game.getMyComputer().writeToLog("Connected to computer on " + ip);
-			game.getConnectedComp().writeToLog(game.getMyComputer().getIp() + " connected to localhost");
+			game.getConnectedComp().writeToLog(game.getMyComputer().getPublicIp() + " connected to localhost");
 			game.getConnectedComp().onConnect(this);
 			return true;
 		}else{
@@ -272,7 +279,7 @@ public class Terminal extends GUIProgram{
 	
 	private void connect(String[] line){
 		if(line.length >= 2){
-			if(connect(line[1])){
+			if(connect(new IP(line[1]))){
 				messageOut("   Connected to computer on " + line[1]);
 			}else{
 				messageOut("   Could not find computer on " + line[1]);
@@ -294,7 +301,7 @@ public class Terminal extends GUIProgram{
 		if(line.length >= 2){
 			if(login(line[1])){
 				messageOut("   Succesfully Logged In");
-				messageOut("You will need to use the login command to have full remote access");
+				//should be in computer on connect: messageOut("You will need to use the login command to have full remote access");
 			}else{
 				messageOut("   Incorrect Password please try again");
 			}
@@ -304,6 +311,10 @@ public class Terminal extends GUIProgram{
 	}
 	
 	public void disconnect(){
+		if(game.getConnectedComp().equals(game.getMyComputer())){
+			messageOut("  Not connected to external computer");
+			return;
+		}
 		game.getConnectedComp().setAccess(false);
 		game.setConnectedComp(game.getMyComputer());
 		messageOut("  Disconnected");
@@ -311,11 +322,11 @@ public class Terminal extends GUIProgram{
 	
 	private void changeDir(String[] command){
 		if(command.length > 1){
-			if(!game.getConnectedComp().changeDir(command[1])){
+			if(!game.getConnectedComp().getMainDrive().changeDir(command[1])){
 				messageOut("   " + command[1] + " could not be found");
 			}
 		}else{
-			game.getConnectedComp().changeDir(" ");
+			game.getConnectedComp().getMainDrive().changeDir(" ");
 		}
 	}
 	
@@ -368,8 +379,8 @@ public class Terminal extends GUIProgram{
 			
 			@Override
 			public void actionPerformed(ActionEvent e){
-				if(game.getConnectedComp().getCurrentDir().getChildren().size() == 0) return;
-				ArrayList<File> children = game.getConnectedComp().getCurrentDir().getChildren();
+				if(game.getConnectedComp().getMainDrive().getCurrentDir().getChildren().size() == 0) return;
+				ArrayList<File> children = game.getConnectedComp().getMainDrive().getCurrentDir().getChildren();
 				
 				fileIndex = (fileIndex + 1) % children.size();
 				int lastIndex = (fileIndex + children.size() - 1) % children.size();

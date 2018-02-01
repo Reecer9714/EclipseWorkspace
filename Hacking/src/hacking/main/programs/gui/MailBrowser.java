@@ -20,7 +20,7 @@ public class MailBrowser extends GUIProgram{
 
 	JSplitPane splitPane = new JSplitPane();
 	splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-	getContentPane().add(splitPane, BorderLayout.CENTER);
+	getFrame().getContentPane().add(splitPane, BorderLayout.CENTER);
 
 	JScrollPane northScrollPane = new JScrollPane();
 	splitPane.setRightComponent(northScrollPane);

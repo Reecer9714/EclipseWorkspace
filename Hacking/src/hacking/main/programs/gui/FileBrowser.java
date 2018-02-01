@@ -28,10 +28,10 @@ public class FileBrowser extends GUIProgram{
 		}
 	    }
 	});
-	getContentPane().add(tree, BorderLayout.CENTER);
+	getFrame().getContentPane().add(tree, BorderLayout.CENTER);
 	
 	JMenuBar menuBar_1 = new JMenuBar();
-	setJMenuBar(menuBar_1);
+	getFrame().setJMenuBar(menuBar_1);
 	
 	JMenu mnFile = new JMenu("File");
 	menuBar_1.add(mnFile);

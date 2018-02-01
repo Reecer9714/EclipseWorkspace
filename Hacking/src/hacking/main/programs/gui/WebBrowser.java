@@ -40,7 +40,7 @@ public class WebBrowser extends GUIProgram{
 		super(os, "WebBrowser", icon, width, height);
 		urlBar = new JTextField();
 		urlBar.addActionListener(new UrlBarHandler());
-		getContentPane().add(urlBar, BorderLayout.NORTH);
+		getFrame().getContentPane().add(urlBar, BorderLayout.NORTH);
 		
 		pages = new HashMap<String,WebPage>();
 		pages.put("https://www.oldegg.com", new StorePage());
@@ -48,9 +48,9 @@ public class WebBrowser extends GUIProgram{
 		
 		JFXPanel panel = new JFXPanel();
 		createScene(panel, os);
-		getContentPane().add(panel, BorderLayout.CENTER);
+		getFrame().getContentPane().add(panel, BorderLayout.CENTER);
 		
-		this.addComponentListener(new ComponentAdapter(){
+		getFrame().addComponentListener(new ComponentAdapter(){
 			@Override
 			public void componentResized(final ComponentEvent e){
 				super.componentResized(e);
