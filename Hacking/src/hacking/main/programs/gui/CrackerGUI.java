@@ -6,25 +6,25 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import hacking.main.GUIGame;
 import hacking.main.ReaperOS;
-import hacking.main.mail.*;
+import hacking.main.internet.IP;
+import hacking.main.programs.Cracker;
 
-public class Cracker extends GUIProgram{
+public class CrackerGUI extends GUIProgram{
 	
+	private Cracker cracker;
 	private JTextField fieldIP;
 	private JTextField fieldPassword;
-	private GUIGame game;
 	private JLabel status;
 	private JProgressBar progressBar;
 	
-	public Cracker(ReaperOS os, ImageIcon icon, int width, int height){
+	public CrackerGUI(ReaperOS os, ImageIcon icon, int width, int height){
 		super(os, "Cracker", icon, width, height);
-		this.game = os.getGame();
-		getContentPane().setLayout(new BorderLayout(0, 0));
+		cracker = new Cracker(os.getGame(), this);
+		getFrame().getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JPanel panelNorth = new JPanel();
-		getContentPane().add(panelNorth, BorderLayout.NORTH);
+		getFrame().getContentPane().add(panelNorth, BorderLayout.NORTH);
 		
 		JLabel lblIP = new JLabel("IP");
 		
@@ -42,28 +42,25 @@ public class Cracker extends GUIProgram{
 				String text = fieldIP.getText();
 				progressBar.setValue(0);
 				setStatus("Connecting");
-				boolean connectStatus;
-				if(game.getConnectedComp().getIp().equals(text)){
-					connectStatus = true;
-				}else{
-					connectStatus = os.getTerminal().connect(text);
-				}
+				IP ip = new IP(text);
+
+				boolean connectStatus = cracker.crack(ip);
 				if(connectStatus){
 					setStatus("Cracking");
 					crackTimer = new Timer(100, new ActionListener(){
 						@Override
 						public void actionPerformed(ActionEvent e){
-							progressBar.setValue(progressBar.getValue()+1);//Change to dynamic value
-							if(progressBar.getValue() >= 100){
+							progressBar.setValue(cracker.getProgress());//Change to dynamic value
+							if(cracker.getProgress() >= 100){
 								crackTimer.stop();
-								fieldPassword.setText(game.getConnectedComp().getPassword());
+								fieldPassword.setText(cracker.getCrackedPW());
 								setStatus("Complete");
 							}
 						}
 					});
 					crackTimer.start();
 				}else{
-					setStatus("Failed to Connect");
+					setStatus("Failed to find IP");
 				}
 				
 			}
@@ -78,7 +75,7 @@ public class Cracker extends GUIProgram{
 		panelNorth.add(buttonCracker);
 		
 		JPanel panelSouth = new JPanel();
-		getContentPane().add(panelSouth, BorderLayout.SOUTH);
+		getFrame().getContentPane().add(panelSouth, BorderLayout.SOUTH);
 		panelSouth.setLayout(new BoxLayout(panelSouth, BoxLayout.X_AXIS));
 		
 		Component horizontalStrut_1 = Box.createHorizontalStrut(20);
@@ -92,6 +89,7 @@ public class Cracker extends GUIProgram{
 		panelSouth.add(fieldPassword);
 		fieldPassword.setColumns(10);
 		
+		/*
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener(){
 			@Override
@@ -105,9 +103,10 @@ public class Cracker extends GUIProgram{
 			}
 		});
 		panelSouth.add(btnLogin);
+		*/
 		
 		JPanel panelCenter = new JPanel();
-		getContentPane().add(panelCenter, BorderLayout.CENTER);
+		getFrame().getContentPane().add(panelCenter, BorderLayout.CENTER);
 		panelCenter.setLayout(new BorderLayout(0, 0));
 		
 		progressBar = new JProgressBar();
@@ -127,7 +126,7 @@ public class Cracker extends GUIProgram{
 		status = new JLabel("Waiting");
 		panelStatus.add(status);
 		
-		this.setResizable(false);
+		getFrame().setResizable(false);
 	}
 	
 	@Override
@@ -141,10 +140,6 @@ public class Cracker extends GUIProgram{
 	
 	private void setStatus(String s){
 		status.setText(s);
-	}
-	
-	private String getStatus(){
-		return status.getText();
 	}
 	
 //	public String crack(String ip){

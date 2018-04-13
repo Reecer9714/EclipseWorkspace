@@ -121,7 +121,7 @@ public class Folder extends File{
 		String files = "    ";
 		
 		for(File file : childs){
-			files += file.getName() + ", ";
+			files += file.toString() + ", ";
 		}
 		
 		return files;

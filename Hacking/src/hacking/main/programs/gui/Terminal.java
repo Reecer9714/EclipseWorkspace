@@ -8,8 +8,7 @@ import javax.swing.*;
 
 import hacking.main.GUIGame;
 import hacking.main.ReaperOS;
-import hacking.main.files.File;
-import hacking.main.files.Program;
+import hacking.main.files.*;
 import hacking.main.internet.IP;
 
 public class Terminal extends GUIProgram{
@@ -164,6 +163,7 @@ public class Terminal extends GUIProgram{
 		command[0] = command[0].toLowerCase();
 		
 		// if runningProgram send input to it
+		
 		if(command[0].equals("")) return;
 		messageOut("");
 		switch(command[0]){
@@ -181,7 +181,8 @@ public class Terminal extends GUIProgram{
 				messageOut(game.getConnectedComp().getMainDrive().getDir().getContents());
 				break;
 			/*
-			 * bounce (ip) linked list run (program) new (txt)
+			 * bounce (ip) linked list 
+			 * new (txt)
 			 */
 			case "open":
 				open(command);
@@ -251,8 +252,8 @@ public class Terminal extends GUIProgram{
 		if(line.length >= 2){
 			if(game.getConnectedComp().getMainDrive().getDir().hasFile(line[1])){
 				File f = game.getConnectedComp().getMainDrive().getDir().getFile(line[1]);
-				if(f instanceof Program){
-					((Program)f).run();
+				if(f instanceof RunnableProgram){
+					((RunnableProgram)f).run();
 				}else{
 					messageOut("this file is not runnable");
 				}
